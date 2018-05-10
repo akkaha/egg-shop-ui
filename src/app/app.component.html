@@ -1,0 +1,22 @@
+<div>
+  <nz-layout style="height:100%;background:white;">
+    <nz-header class="non-printable" style="height:48px;padding:0px;">
+      <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 48px;">
+        <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
+          <a routerLink="/home">首页</a>
+        </li>
+        <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
+          <a routerLink="/shop-order-list">户单</a>
+        </li>
+        <li style="height:47px;">
+          <button style="margin-left:16px;" nz-button [nzType]="'dashed'" nzSize="small" nzGhost (click)="newOrder()">
+            <span>新建户单</span>
+          </button>
+        </li>
+      </ul>
+    </nz-header>
+    <nz-content class="nz-content">
+      <router-outlet></router-outlet>
+    </nz-content>
+  </nz-layout>
+</div>

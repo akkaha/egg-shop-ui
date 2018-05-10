@@ -1,0 +1,171 @@
+<div style="background-color:white;">
+  <div>
+    <nz-alert [nzType]="isFinished() ? 'success' : 'warning'" nzShowIcon>
+      <div nz-row alert-body>
+        <div nz-col [nzMd]="8" [nzXs]="16" [nzSm]="16">
+          <span>户单号: </span>
+          <span style="font-weight:bold;color:black;">{{order.id}}</span>
+        </div>
+        <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
+          <span>数量: </span>
+          <span style="font-weight:bold;color:black;">{{count}}</span>
+        </div>
+        <div *ngIf="order.createdAt" nz-col [nzMd]="4" [nzXs]="24" [nzSm]="24">
+          <span>创建时间: </span>
+          <span style="font-weight:bold;color:black;">{{order.createdAt}}</span>
+        </div>
+      </div>
+    </nz-alert>
+  </div>
+  <div nz-row [nzGutter]="3" style="padding-top:7px;">
+    <div nz-col [nzMd]="8" [nzXs]="12" [nzSm]="12">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.seller" (ngModelChange)="orderChange()">
+        <ng-template #addOnBefore>
+          <span>姓名:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzMd]="8" [nzXs]="12" [nzSm]="12">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.phone" (ngModelChange)="orderChange()">
+        <ng-template #addOnBefore>
+          <span>手机号:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzMd]="8" [nzXs]="24" [nzSm]="24">
+      <nz-input style="width:100%;" [nzReadonly]="true" [ngModel]="descCar(defaultCar)" [nzPlaceHolder]="'选择默认车次'">
+        <ng-template #addOnBefore>
+          <span (click)="$event.stopPropagation()">车次:</span>
+        </ng-template>
+        <ng-template *ngIf="!readonly" #addOnAfter>
+          <div class="car-select" (click)="selectCar()">
+            <i class="anticon anticon-select"></i>
+            <span>更换</span>
+          </div>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzSpan]="24" style="padding-top:3px;">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.remark" (ngModelChange)="orderChange()">
+        <ng-template #addOnBefore>
+          <span>备注:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+  </div>
+  <div style="padding-top:13px;">
+    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
+      nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues" [nzShowTitle]="checkedNumber">
+      <div nz-table-title>
+        <div>
+          <div>
+            <span style="margin-left: 8px;" *ngIf="checkedNumber">
+              <span>选择了</span>
+              <span style="color:red;">{{checkedNumber}}</span>
+              <span> 件</span>
+              <a style="padding-left:5px;" href="javascript:void(0);" (click)="addToCar()">加入车次</a>
+              <a style="padding-left:5px;" href="javascript:void(0);" (click)="removeFromCar()">全部移出车次</a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <thead nz-thead>
+        <tr>
+          <th nz-th nzCheckbox>
+            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
+          </th>
+          <th nz-th style="padding:5px;">
+            <span>序号</span>
+          </th>
+          <th nz-th style="padding:5px;">
+            <span>重量</span>
+          </th>
+          <th nz-th style="padding:5px;width:48px;">
+            <span>车次</span>
+          </th>
+          <th nz-th style="padding:5px;width:100px;">
+            <span>状态</span>
+          </th>
+          <th *ngIf="!readonly" nz-th style="padding:5px;width:48px;">
+            <span>移除</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
+          <td nz-td nzCheckbox>
+            <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="refreshStatus($event)"></label>
+          </td>
+          <td nz-td style="padding:2px;width:50px;">
+            <span>{{itemIndex(i)+1}}</span>
+          </td>
+          <td nz-td style="padding:2px;">
+            <div *ngIf="item.error" style="color:coral;">
+              <i class="anticon anticon-info-circle-o"></i>
+              <span>输入数字, 1.0 ~ 9999.0</span>
+            </div>
+            <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight" (ngModelChange)="itemChange(item, itemIndex(i))"
+              (nzBlur)="itemBlur(item, i)">
+              <ng-template #addOnAfter>
+                <span>斤</span>
+              </ng-template>
+            </nz-input>
+          </td>
+          <td nz-td>
+            <nz-popover [(nzVisible)]="popVisible[itemIndex(i)]" [nzTrigger]="'click'" [nzTitle]="'选择车次'">
+              <button *ngIf="!item.car" nz-popover style="color:lightgray;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
+                <i class="anticon anticon-car"></i>
+              </button>
+              <button *ngIf="item.car" nz-popover style="color:lightgreen;font-weight:bold;" nz-button [nzType]="'dashed'" [nzSize]="'small'"
+                [nzShape]="'circle'">
+                <i class="anticon anticon-car"></i>
+              </button>
+              <ng-template #nzTemplate>
+                <div *ngIf="item.car">
+                  <p>车次单号: {{item.car}}</p>
+                  <p *ngIf="!readonly">
+                    <a href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">更换</a>
+                    <span>车次, </span>
+                    <a href="javascript:void(0);" (click)="itemDeleteCar(item, itemIndex(i))">移除</a>
+                  </p>
+                </div>
+                <div *ngIf="!item.car">
+                  <p>
+                    <span>不属于任何车次</span>
+                    <span *ngIf="!readonly">,</span>
+                    <a *ngIf="!readonly" href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">选择一个</a>
+                  </p>
+                </div>
+              </ng-template>
+            </nz-popover>
+          </td>
+          <td nz-td style="padding:2px;">
+            <span [ngStyle]="itemStyle(item)">{{item.status}}</span>
+          </td>
+          <td *ngIf="!readonly" nz-td style="padding:2px 8px;">
+            <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'" (click)="remove(item, itemIndex(i))">
+              <i class="anticon anticon-delete"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="!readonly" nz-row style="padding-bottom:10px;">
+    <app-pop-input (enter)="onEnter($event)"></app-pop-input>
+  </div>
+  <div nz-row [ngStyle]="{'padding-top' : values.length === 0 ? '5px' : '0px'}">
+    <div nz-col [nzSpan]="24">
+      <button *ngIf="!readonly" nz-button [nzType]="'primary'" (click)="doAddEmptyItem()">
+        <span>新加一箱</span>
+      </button>
+      <button *ngIf="!readonly" nz-button [nzType]="'danger'" (click)="doCommit()">
+        <span>提交结算</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (click)="goBack()">
+        <i class="anticon anticon-rollback"></i>
+        <span style="margin:0px;">返回列表</span>
+      </button>
+    </div>
+  </div>
+</div>
