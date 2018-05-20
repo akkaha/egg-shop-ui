@@ -1635,6 +1635,10 @@ data-uri-to-buffer@1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-1.2.0.tgz#77163ea9c20d8641b4707e8f18abdf9a78f34835"
 
+date-fns@^1.29.0:
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
+
 date-format@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/date-format/-/date-format-1.2.0.tgz#615e828e233dd1ab9bb9ae0950e0ceccfa6ecad8"
@@ -4252,10 +4256,6 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
-moment@^2.18.1:
-  version "2.22.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
-
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -4331,13 +4331,12 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-ng-zorro-antd@^0.6.15:
-  version "0.6.15"
-  resolved "https://registry.yarnpkg.com/ng-zorro-antd/-/ng-zorro-antd-0.6.15.tgz#acef41a30febce835b871d52cd47d042ac2ed443"
+ng-zorro-antd@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/ng-zorro-antd/-/ng-zorro-antd-0.7.0.tgz#36c60d72ee2303a97e6dcc4b8f93cba9cf4269ff"
   dependencies:
     "@angular/cdk" "^5.0.0"
-    moment "^2.18.1"
-    tslib "^1.7.1"
+    date-fns "^1.29.0"
 
 no-case@^2.2.0:
   version "2.3.2"
