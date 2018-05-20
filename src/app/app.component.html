@@ -8,8 +8,14 @@
         <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
           <a routerLink="/shop-order-list">户单</a>
         </li>
+        <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
+          <a routerLink="/shop-user-list">客户</a>
+        </li>
+        <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
+          <a routerLink="/shop-order-dashboard">统计</a>
+        </li>
         <li style="height:47px;">
-          <button style="margin-left:16px;" nz-button [nzType]="'dashed'" nzSize="small" nzGhost (click)="newOrder()">
+          <button style="margin-left:16px;" nz-button [nzType]="'dashed'" nzSize="default" nzGhost (click)="newOrder()">
             <span>新建户单</span>
           </button>
         </li>

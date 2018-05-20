@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http'
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import * as moment from 'moment'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
 import { API_ORDER_BILL_INSERT, API_ORDER_BILL_QUERY } from '../../api/egg.api'
 import { ApiRes, ApiResObj } from '../../model/api.model'
@@ -61,7 +61,6 @@ export class PayPatternComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,

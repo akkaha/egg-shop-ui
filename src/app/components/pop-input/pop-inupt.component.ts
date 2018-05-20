@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 
 import { canSpeack, speak, stopSpeak } from '../../util/speach-recognition-synthesis';
 
@@ -23,7 +23,6 @@ export class PopInuptComponent implements OnInit {
   @Output() enter = new EventEmitter<string>()
 
   constructor(
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,

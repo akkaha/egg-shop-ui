@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as math from 'mathjs';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 
 import { API_USER_ORDER_PAY } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
@@ -46,7 +46,6 @@ export class ShopOrderPrintComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,

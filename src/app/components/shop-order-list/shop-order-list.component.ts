@@ -4,7 +4,7 @@ import { Location } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
 import {
   API_ORDER_ITEM_BATCH_UPDATE_CAR,
@@ -44,29 +44,11 @@ export class ShopOrderListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,
   ) { }
 
-  addToCar() {
-  }
-  removeFromCar() {
-    this.modal.confirm({
-      title: '移除',
-      content: `确认移除吗?`,
-      onOk: () => {
-        const req = {
-          ids: this.checkedItems.map(item => item.id),
-          isByUser: true,
-        }
-        this.http.post<ApiRes<UserOrder>>(API_ORDER_ITEM_BATCH_UPDATE_CAR, req).subscribe(res => {
-          this.message.success('操作成功')
-        })
-      }
-    })
-  }
   refreshStatus() {
     const allChecked = this.list.every(value => value.checked === true)
     const allUnChecked = this.list.every(value => !value.checked)
@@ -198,10 +180,10 @@ export class ShopOrderListComponent implements OnInit {
     })
   }
   doDelete(item: UserOrder) {
-    this.modal.confirm({
-      title: '删除',
-      content: `确认删除吗,删除后所有关联数据将不可找回?`,
-      onOk: () => {
+    this.modal.create({
+      nzTitle: '删除',
+      nzContent: `确认删除吗,删除后所有关联数据将不可找回?`,
+      nzOnOk: () => {
         const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')

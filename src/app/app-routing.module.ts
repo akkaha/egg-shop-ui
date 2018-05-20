@@ -11,7 +11,7 @@ import { ShopOrderComponent } from './components/shop-order/shop-order.component
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'shop-order-list', component: ShopOrderListComponent },
-  { path: 'new-shop-order', component: ShopOrderComponent },
+  { path: 'shop-order', component: ShopOrderComponent },
   { path: 'shop-order/:id', component: ShopOrderComponent },
   { path: 'shop-order-pay/:id', component: ShopOrderPayComponent },
   { path: 'shop-order-print/:id', component: ShopOrderPrintComponent },

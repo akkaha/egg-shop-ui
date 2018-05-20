@@ -1,5 +1,44 @@
 <div style="background-color:white;">
   <div>
+    <div>
+      <nz-card style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle" nzTitle="选择六层使用的斤称" [nzExtra]="extraTemplate6">
+        <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sixWeights; let i=index">
+          <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+            <input type="text" nz-input [(ngModel)]="item.weight" (ngModelChange)="weightLevelChange('6',item.weight)" placeholder="输入新斤称">
+          </nz-input-group>
+          <ng-template #suffixButton>
+            <button nz-button nzType="primary" nzSize="large" nzSearch (click)="removeWeightLevel('6', i)">移除</button>
+          </ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <ng-template #extraTemplate6>
+      <a class="click-icon" (click)="sortWeightLevel('6')" style="padding-right: 5px;">排序</a>
+      <a class="click-icon" (click)="addWeightLevel('6')">添加</a>
+    </ng-template>
+    <div style="margin-top:7px;">
+      <nz-card style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle" nzTitle="选择七层使用的斤称" [nzExtra]="extraTemplate7">
+        <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sevenWeights; let i=index">
+          <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+            <input type="text" nz-input [(ngModel)]="item.weight" (ngModelChange)="weightLevelChange('7',item.weight)" placeholder="输入新斤称">
+          </nz-input-group>
+          <ng-template #suffixButton>
+            <button nz-button nzType="primary" nzSize="large" nzSearch (click)="removeWeightLevel('7', i)">移除</button>
+          </ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <ng-template #extraTemplate7>
+      <a class="click-icon" (click)="sortWeightLevel('7')" style="padding-right: 5px;">排序</a>
+      <a class="click-icon" (click)="addWeightLevel('7')">添加</a>
+    </ng-template>
+    <div style="padding-top: 16px;" nz-row>
+      <div nz-col nzSpan="4" nzOffset="20">
+        <button style="width:100%;" nz-button nzType="primary" nzSize="large">确认新建</button>
+      </div>
+    </div>
+  </div>
+  <!-- <div>
     <nz-alert [nzType]="isFinished() ? 'success' : 'warning'" nzShowIcon>
       <div nz-row alert-body>
         <div nz-col [nzMd]="8" [nzXs]="16" [nzSm]="16">
@@ -167,5 +206,5 @@
         <span style="margin:0px;">返回列表</span>
       </button>
     </div>
-  </div>
+  </div> -->
 </div>
