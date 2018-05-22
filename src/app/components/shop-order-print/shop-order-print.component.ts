@@ -10,9 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as math from 'mathjs';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 
-import { API_USER_ORDER_PAY } from '../../api/egg.api';
+import { API_ORDER_PAY } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { BillItem, CarOrder, DefaultPrintConfig, OrderBill, PrintConfig, UserOrder } from '../../model/egg.model';
+import { BillItem, DefaultPrintConfig, OrderBill, PrintConfig, ShopOrder } from '../../model/egg.model';
 import { PrintTable, toPrintTables } from '../../model/print.model';
 import { OrderPayRes } from '../shop-order-pay/shop-order-pay.component';
 
@@ -23,9 +23,9 @@ import { OrderPayRes } from '../shop-order-pay/shop-order-pay.component';
 })
 export class ShopOrderPrintComponent implements OnInit {
 
-  order: UserOrder = {}
+  order: ShopOrder = {}
   bill: OrderBill = {}
-  car: CarOrder
+  car: ShopOrder
   weightAdjustStr = ''
 
   values: BillItem[] = []
@@ -185,7 +185,7 @@ export class ShopOrderPrintComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = params['id']
       if (id) {
-        this.http.get<ApiRes<OrderPayRes>>(`${API_USER_ORDER_PAY}/${id}`).subscribe(res => {
+        this.http.get<ApiRes<OrderPayRes>>(`${API_ORDER_PAY}/${id}`).subscribe(res => {
           if (res.data.car) {
             this.car = res.data.car
           }

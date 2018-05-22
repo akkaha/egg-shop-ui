@@ -9,9 +9,9 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import { API_USER_ORDER_PAY, API_USER_ORDER_UPDATE } from '../../api/egg.api'
+import { API_ORDER_PAY, API_ORDER_UPDATE } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
-import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra, UserOrder } from '../../model/egg.model'
+import { clearOrderField, OrderBill, OrderStatus, PriceExtra, ShopOrder } from '../../model/egg.model'
 
 @Component({
   templateUrl: './shop-order-pay.component.html',
@@ -19,7 +19,7 @@ import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra, UserOrde
 })
 export class ShopOrderPayComponent implements OnInit {
 
-  order: UserOrder = {}
+  order: ShopOrder = {}
   bill: OrderBill = {
     items: [],
     priceRange: {}
@@ -28,7 +28,7 @@ export class ShopOrderPayComponent implements OnInit {
   tablePageIndex = 1
   tablePageSize = 10
   pageSizeSelectorValues = [10, 20, 30, 40, 50, 100, 200, 500]
-  defaultCar: CarOrder
+  defaultCar: ShopOrder
   popVisible = {}
   orderPayRes: OrderPayRes = {}
   weightAdjustStr = ''
@@ -42,9 +42,9 @@ export class ShopOrderPayComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
-  descCar(car: CarOrder) {
+  descCar(car: ShopOrder) {
     if (car) {
-      return `单号: ${car.id}, 姓名: ${car.driver}, 日期: ${car.createdAt}`
+      return `单号: ${car.id}, 姓名:, 日期: ${car.createdAt}`
     } else {
       return '未选择'
     }
@@ -58,12 +58,12 @@ export class ShopOrderPayComponent implements OnInit {
   doFinish() {
     this.modal.create({
       nzTitle: `确认完成`,
-      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.seller}, 手机: ${this.order.phone}, 数量: ${this.bill.totalCount}.`,
+      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.user}, 手机: ${this.order.phone}, 数量: ${this.bill.totalCount}.`,
       nzOnOk: () => {
         const toUpdate = clearOrderField(this.order)
         toUpdate.status = OrderStatus.FINISHED
         toUpdate.bill = JSON.stringify(this.bill)
-        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, toUpdate).subscribe(res => {
+        this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, toUpdate).subscribe(res => {
           this.order.status = OrderStatus.FINISHED
           this.readonly = true
           this.message.success('操作成功')
@@ -77,7 +77,7 @@ export class ShopOrderPayComponent implements OnInit {
       nzContent: `打回后状态变为 '新增', 需要重新提交.`,
       nzOnOk: () => {
         this.order.status = OrderStatus.NEW
-        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
+        this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
           this.goBack()
         })
       }
@@ -99,7 +99,7 @@ export class ShopOrderPayComponent implements OnInit {
     }
   }
   doCalc(date: string) {
-    this.http.get<ApiRes<OrderPayRes>>(`${API_USER_ORDER_PAY}/${this.order.id}?date=${date}`).subscribe(res => {
+    this.http.get<ApiRes<OrderPayRes>>(`${API_ORDER_PAY}/${this.order.id}?date=${date}`).subscribe(res => {
       this.bill = res.data.bill
       this.orderPayRes = res.data
       this.setWeightAdjustStr()
@@ -112,7 +112,7 @@ export class ShopOrderPayComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = params['id']
       if (id) {
-        this.http.get<ApiRes<OrderPayRes>>(`${API_USER_ORDER_PAY}/${id}`).subscribe(res => {
+        this.http.get<ApiRes<OrderPayRes>>(`${API_ORDER_PAY}/${id}`).subscribe(res => {
           this.orderPayRes = res.data
           if (res.data.car) {
             this.defaultCar = res.data.car
@@ -127,8 +127,8 @@ export class ShopOrderPayComponent implements OnInit {
 }
 
 export interface OrderPayRes {
-  order?: UserOrder
+  order?: ShopOrder
   bill?: OrderBill
-  car?: CarOrder
+  car?: ShopOrder
   priceExtra?: PriceExtra
 }

@@ -1,31 +1,28 @@
 import { Subject } from 'rxjs/Subject';
 
-export interface UserOrder {
+export interface ShopUser {
   id?: number
-  seller?: string
+  name?: string
+  country?: number
   phone?: string
-  car?: number
-  bill?: string
-  status?: string
   remark?: string
   createdAt?: string
   updatedAt?: string
 }
 
-export interface ListUserOrderItem extends UserOrder {
-  checked?: boolean
-}
-
-export interface CarOrder {
+export interface ShopOrder {
   id?: number
-  serial?: string
-  driver?: string
-  driverPhone?: string
+  user?: number
+  phone?: string
   bill?: string
   status?: string
   remark?: string
   createdAt?: string
   updatedAt?: string
+}
+
+export interface ListShopOrderItem extends ShopOrder {
+  checked?: boolean
 }
 
 export const OrderStatus = {
@@ -38,8 +35,10 @@ export const OrderStatus = {
 export interface OrderItem {
   id?: number
   weight?: string
+  count?: number
+  order?: number
+  level?: number
   user?: number
-  car?: number
   createdAt?: string
   updatedAt?: string
   /** use internal */
@@ -122,6 +121,10 @@ export const DbStatus = {
   CREATED: 'created'
 }
 
+export interface OrderDetail {
+  order: ShopOrder
+  items: OrderItem[]
+}
 export function clearNewOrderItem(item: OrderItem) {
   const newItem: OrderItem = { ...item }
   newItem.dbStatus = undefined
@@ -135,8 +138,8 @@ export function clearNewOrderItem(item: OrderItem) {
   return newItem
 }
 
-export function clearOrderField(item: UserOrder | CarOrder) {
-  const newItem: UserOrder | CarOrder = { ...item }
+export function clearOrderField(item: ShopOrder | ShopOrder) {
+  const newItem: ShopOrder | ShopOrder = { ...item }
   newItem.createdAt = undefined
   newItem.updatedAt = undefined
   return newItem

@@ -8,12 +8,12 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
 import {
   API_ORDER_ITEM_BATCH_UPDATE_CAR,
-  API_USER_ORDER_DELETE,
-  API_USER_ORDER_QUERY,
-  API_USER_ORDER_UPDATE,
+  API_ORDER_DELETE,
+  API_ORDER_QUERY,
+  API_ORDER_UPDATE,
 } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
-import { ListUserOrderItem, OrderStatus, UserOrder } from '../../model/egg.model'
+import { ListShopOrderItem, OrderStatus, ShopOrder } from '../../model/egg.model'
 
 @Component({
   templateUrl: './shop-order-list.component.html',
@@ -25,8 +25,8 @@ export class ShopOrderListComponent implements OnInit {
   indeterminate = false
   checkedNumber = 0
   checkedItemCount = 0
-  checkedItems: ListUserOrderItem[] = []
-  search: UserOrder = {}
+  checkedItems: ListShopOrderItem[] = []
+  search: ShopOrder = {}
   total = 0
   current = 1
   size = 10
@@ -36,7 +36,7 @@ export class ShopOrderListComponent implements OnInit {
     { label: '完成', value: OrderStatus.FINISHED },
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
-  list: ListUserOrderItem[] = []
+  list: ListShopOrderItem[] = []
   countMap: { [key: number]: number } = {}
 
 
@@ -77,7 +77,7 @@ export class ShopOrderListComponent implements OnInit {
     }
     this.refreshStatus()
   }
-  itemCount(item: UserOrder) {
+  itemCount(item: ShopOrder) {
     if (this.countMap) {
       const count = this.countMap[item.id]
       if (count) {
@@ -94,7 +94,7 @@ export class ShopOrderListComponent implements OnInit {
     this.load()
   }
   load() {
-    this.http.post<ApiRes<UserOrder[]>>(API_USER_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
+    this.http.post<ApiRes<ShopOrder[]>>(API_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
       this.list = res.data.list
       this.total = res.data.total
       this.countMap = res.data['count']
@@ -128,35 +128,35 @@ export class ShopOrderListComponent implements OnInit {
         return '未知'
     }
   }
-  canBeDeprecated(item: UserOrder) {
+  canBeDeprecated(item: ShopOrder) {
     return item.status === OrderStatus.NEW
   }
-  canEdit(item: UserOrder) {
+  canEdit(item: ShopOrder) {
     return item.status === OrderStatus.NEW
   }
-  canView(item: UserOrder) {
+  canView(item: ShopOrder) {
     return item.status !== OrderStatus.NEW
   }
-  canDeal(item: UserOrder) {
+  canDeal(item: ShopOrder) {
     return item.status === OrderStatus.COMMITED
   }
-  canPrint(item: UserOrder) {
+  canPrint(item: ShopOrder) {
     return item.status === OrderStatus.FINISHED
   }
-  canRestore(item: UserOrder) {
+  canRestore(item: ShopOrder) {
     return item.status === OrderStatus.DEPRECATED
   }
-  doDeprecate(item: UserOrder) {
-    const order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
-    this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+  doDeprecate(item: ShopOrder) {
+    const order: ShopOrder = { id: item.id, status: OrderStatus.DEPRECATED }
+    this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
     })
   }
-  doEdit(item: UserOrder) {
+  doEdit(item: ShopOrder) {
     this.router.navigate([`/shop-order/${item.id}`])
   }
-  doView(item: UserOrder) {
+  doView(item: ShopOrder) {
     const navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
     }
@@ -166,26 +166,26 @@ export class ShopOrderListComponent implements OnInit {
       this.router.navigate([`/shop-order/${item.id}`], navigationExtras)
     }
   }
-  doPay(item: UserOrder) {
+  doPay(item: ShopOrder) {
     this.router.navigate([`/shop-order-pay/${item.id}`])
   }
-  doPrint(item: UserOrder) {
+  doPrint(item: ShopOrder) {
     this.router.navigate([`/shop-order-print/${item.id}`])
   }
-  doRestore(item: UserOrder) {
-    const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
-    this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+  doRestore(item: ShopOrder) {
+    const order: ShopOrder = { id: item.id, status: OrderStatus.NEW }
+    this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
     })
   }
-  doDelete(item: UserOrder) {
+  doDelete(item: ShopOrder) {
     this.modal.create({
       nzTitle: '删除',
       nzContent: `确认删除吗,删除后所有关联数据将不可找回?`,
       nzOnOk: () => {
-        const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
-        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_DELETE, order).subscribe(res => {
+        const order: ShopOrder = { id: item.id, status: OrderStatus.NEW }
+        this.http.post<ApiRes<ShopOrder>>(API_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')
           this.load()
         })
