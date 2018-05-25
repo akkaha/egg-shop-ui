@@ -5,8 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-import { API_ORDER_DETAIL, API_ORDER_INSERT, API_USER_QUERY } from '../../api/egg.api'
-import { ApiRes } from '../../model/api.model'
+import {
+  API_ORDER_DETAIL,
+  API_ORDER_INSERT,
+  API_ORDER_ITEM_DEC,
+  API_ORDER_ITEM_INC,
+  API_USER_QUERY,
+} from '../../api/egg.api'
+import { ApiRes, ApiResObj } from '../../model/api.model'
 import { OrderDetail, OrderItem, ShopOrder, ShopUser } from '../../model/egg.model'
 import { mathIsNumeric, mathSort } from '../../util/math-util'
 
@@ -49,10 +55,14 @@ export class ShopOrderComponent implements OnInit {
   ) { }
 
   plusItemCount(item: OrderItem) {
-    console.log('plus', item)
+    this.http.post<ApiRes<number>>(API_ORDER_ITEM_INC, item).subscribe(res => {
+      item.count = res.data
+    })
   }
   minusItemCount(item: OrderItem) {
-    console.log('minus', item)
+    this.http.post<ApiRes<number>>(API_ORDER_ITEM_DEC, item).subscribe(res => {
+      item.count = res.data
+    })
   }
   newOrder() {
     if (this.user && this.user.name) {
