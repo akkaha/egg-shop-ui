@@ -7,10 +7,12 @@ import { ShopOrderListComponent } from './components/shop-order-list/shop-order-
 import { ShopOrderPayComponent } from './components/shop-order-pay/shop-order-pay.component'
 import { ShopOrderPrintComponent } from './components/shop-order-print/shop-order-print.component'
 import { ShopOrderComponent } from './components/shop-order/shop-order.component'
+import { ShopUserListComponent } from './components/shop-user-list/shop-user-list.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'shop-order-list', component: ShopOrderListComponent },
+  { path: 'shop-user-list', component: ShopUserListComponent },
   { path: 'shop-order', component: ShopOrderComponent },
   { path: 'shop-order/:id', component: ShopOrderComponent },
   { path: 'shop-order-pay/:id', component: ShopOrderPayComponent },

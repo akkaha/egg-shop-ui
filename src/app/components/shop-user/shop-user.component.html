@@ -1,0 +1,29 @@
+<div>
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <nz-input-group nzAddOnBefore="姓名:">
+        <input type="text" nz-input [(ngModel)]="user.name">
+      </nz-input-group>
+    </div>
+    <div nz-col nzSpan="24" style="padding-top:5px;">
+      <nz-input-group nzAddOnBefore="村庄:">
+        <input type="text" nz-input [(ngModel)]="user.country">
+      </nz-input-group>
+    </div>
+    <div nz-col nzSpan="24" style="padding-top:5px;">
+      <nz-input-group nzAddOnBefore="手机:">
+        <input type="text" nz-input [(ngModel)]="user.phone">
+      </nz-input-group>
+    </div>
+    <div nz-col nzSpan="24" style="padding-top:5px;">
+      <nz-input-group nzAddOnBefore="备注:">
+        <textarea row="4" nz-input [(ngModel)]="user.remark"></textarea>
+      </nz-input-group>
+    </div>
+    <div nz-col [nzXs]="4" [nzSm]="4" [nzMd]="4" style="padding-top:5px;">
+      <button [nzSize]="'default'" nz-button [nzType]="'primary'" (click)="save()">
+        <span style="margin:0px;">保存</span>
+      </button>
+    </div>
+  </div>
+</div>

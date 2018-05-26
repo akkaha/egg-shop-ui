@@ -1,6 +1,8 @@
 export const BASE_URL = '/shop'
 
 export const API_USER_QUERY = BASE_URL + '/user/query'
+export const API_USER_SAVE = BASE_URL + '/user/save'
+export const API_USER_DELETE = BASE_URL + '/user/delete'
 
 export const API_ORDER_QUERY = BASE_URL + '/order/query'
 export const API_ORDER_INSERT = BASE_URL + '/order/insert'

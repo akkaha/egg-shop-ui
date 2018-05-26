@@ -15,6 +15,8 @@ import { ShopOrderListComponent } from './components/shop-order-list/shop-order-
 import { ShopOrderPayComponent } from './components/shop-order-pay/shop-order-pay.component'
 import { ShopOrderPrintComponent } from './components/shop-order-print/shop-order-print.component'
 import { ShopOrderComponent } from './components/shop-order/shop-order.component'
+import { ShopUserListComponent } from './components/shop-user-list/shop-user-list.component'
+import { ShopUserComponent } from './components/shop-user/shop-user.component'
 
 @NgModule({
   declarations: [
@@ -26,8 +28,11 @@ import { ShopOrderComponent } from './components/shop-order/shop-order.component
     PayPatternComponent,
     PopInuptComponent,
     ShopOrderPrintComponent,
+    ShopUserListComponent,
+    ShopUserComponent,
   ],
   entryComponents: [
+    ShopUserComponent
   ],
   imports: [
     BrowserModule,
