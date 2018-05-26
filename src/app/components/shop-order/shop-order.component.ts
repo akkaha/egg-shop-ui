@@ -3,17 +3,18 @@ import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import { Subject } from 'rxjs/Subject'
 
 import {
   API_ORDER_DETAIL,
   API_ORDER_INSERT,
   API_ORDER_ITEM_DEC,
   API_ORDER_ITEM_INC,
+  API_ORDER_UPDATE,
   API_USER_QUERY,
 } from '../../api/egg.api'
-import { ApiRes, ApiResObj } from '../../model/api.model'
-import { OrderDetail, OrderItem, ShopOrder, ShopUser } from '../../model/egg.model'
+import { ApiRes } from '../../model/api.model'
+import { OrderDetail, OrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
 import { mathIsNumeric, mathSort } from '../../util/math-util'
 
 @Component({
@@ -37,13 +38,14 @@ export class ShopOrderComponent implements OnInit {
   readonly = false
   SHOP_ORDER_WEIGHTS = 'SHOP_ORDER_WEIGHTS'
   isLoading = false
-  searchChange = new BehaviorSubject('')
+  searchChange = new Subject<string>()
   userList: ShopUser[] = []
   user: ShopUser = {}
-  selectedUser: ShopUser
+  selectedUser: ShopUser = {}
   countryEditable = true
   orderCreated = false
   order: ShopOrder = {}
+  totalCount = 0
 
   constructor(
     private route: ActivatedRoute,
@@ -55,13 +57,15 @@ export class ShopOrderComponent implements OnInit {
   ) { }
 
   plusItemCount(item: OrderItem) {
-    this.http.post<ApiRes<number>>(API_ORDER_ITEM_INC, item).subscribe(res => {
-      item.count = res.data
+    this.http.post<ApiRes<{ item: number, total: number }>>(API_ORDER_ITEM_INC, item).subscribe(res => {
+      item.count = res.data.item
+      this.totalCount = res.data.total
     })
   }
   minusItemCount(item: OrderItem) {
-    this.http.post<ApiRes<number>>(API_ORDER_ITEM_DEC, item).subscribe(res => {
-      item.count = res.data
+    this.http.post<ApiRes<{ item: number, total: number }>>(API_ORDER_ITEM_DEC, item).subscribe(res => {
+      item.count = res.data.item
+      this.totalCount = res.data.total
     })
   }
   newOrder() {
@@ -173,12 +177,27 @@ export class ShopOrderComponent implements OnInit {
     }
     localStorage.setItem(this.SHOP_ORDER_WEIGHTS, JSON.stringify(levels))
   }
+  doCommit() {
+    this.modal.confirm({
+      nzTitle: `确认提交?`,
+      nzContent: `编号: ${this.order.id}`,
+      nzOnOk: () => {
+        const order: ShopOrder = { id: this.order.id, status: OrderStatus.COMMITED }
+        this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
+          this.router.navigate(['/shop-order-list'])
+        })
+      }
+    })
+  }
+  goBack() {
+    this.router.navigate(['/shop-order-list'])
+  }
   ngOnInit(): void {
     this.searchChange.debounceTime(300).subscribe(value => {
-      const user: ShopUser = { name: value }
+      const user = { name: value, size: 100 }
       this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, user).subscribe(res => {
-        if (res.data.length > 0) {
-          this.userList = res.data
+        if (res.data.list.length > 0) {
+          this.userList = res.data.list
         } else {
           this.userList = [{ id: -1, name: value }]
         }
@@ -194,8 +213,26 @@ export class ShopOrderComponent implements OnInit {
       const id = params['id']
       if (id) {
         // edit or view
-        this.http.get<ApiRes<{ order: ShopOrder, items: OrderItem[], car: ShopOrder }>>(`${API_ORDER_DETAIL}/${id}`).subscribe(res => {
-        })
+        this.orderCreated = true
+        this.http.get<ApiRes<{ order: ShopOrder, items: OrderItem[], user: ShopUser, total: number }>>
+          (`${API_ORDER_DETAIL}/${id}`).subscribe(res => {
+            this.selectedUser = res.data.user || {}
+            this.user = { ...this.selectedUser }
+            this.userList.push(this.selectedUser)
+            this.order = res.data.order
+            this.totalCount = res.data.total
+            const tmpSix: OrderItem[] = []
+            const tmpSeven: OrderItem[] = []
+            res.data.items.forEach(item => {
+              if (item.level === 6) {
+                tmpSix.push(item)
+              } else if (item.level === 7) {
+                tmpSeven.push(item)
+              }
+            })
+            this.sixWeightItems = tmpSix
+            this.sevenWeightItems = tmpSeven
+          })
       } else {
         // new
         const weigths = localStorage.getItem(this.SHOP_ORDER_WEIGHTS)

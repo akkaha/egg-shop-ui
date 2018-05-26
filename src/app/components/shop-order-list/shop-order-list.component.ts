@@ -151,10 +151,10 @@ export class ShopOrderListComponent implements OnInit {
   ngOnInit(): void {
     this.load()
     this.searchChange.debounceTime(300).subscribe(value => {
-      const user: ShopUser = { name: value }
+      const user = { name: value, size: 100 }
       this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, user).subscribe(res => {
-        if (res.data.length > 0) {
-          this.userList = res.data
+        if (res.data.list.length > 0) {
+          this.userList = res.data.list
         } else {
           this.userList = []
         }
