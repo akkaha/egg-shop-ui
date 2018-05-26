@@ -34,7 +34,6 @@ export class ShopUserListComponent implements OnInit {
   ) { }
 
   doSearch(): void {
-    this.current = 1
     this.searchChange.next('');
   }
   addUser() {
