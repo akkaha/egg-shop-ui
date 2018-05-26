@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NgZorroAntdModule } from 'ng-zorro-antd'
+import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd'
 
 import { AppRoutingModule } from './/app-routing.module'
 import { ApiCodeInterceptor } from './api/api-code.interceptor'
@@ -43,6 +43,7 @@ import { ShopOrderComponent } from './components/shop-order/shop-order.component
       useClass: ApiCodeInterceptor,
       multi: true
     },
+    { provide: NZ_I18N, useValue: zh_CN }
   ],
   bootstrap: [AppComponent]
 })

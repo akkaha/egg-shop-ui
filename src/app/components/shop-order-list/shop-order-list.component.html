@@ -1,60 +1,50 @@
 <div style="background-color:white;">
-  shop-order-list
-  <!-- <div nz-row [nzGutter]="3" style="padding-top:7px;">
-    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
-      <nz-input style="width:100%;" [(ngModel)]="search.seller">
-        <ng-template #addOnBefore>
-          <span>姓名:</span>
-        </ng-template>
-      </nz-input>
+  <div nz-row [nzGutter]="3" style="padding-top:7px;">
+    <div nz-col [nzXs]="10" [nzSm]="10" [nzMd]="10">
+      <nz-input-group nzAddOnBefore="客户:">
+        <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="search.user" nzAllowClear nzShowSearch [nzServerSearch]="true"
+          (nzOnSearch)="onSearchUser($event)" [nzNotFoundContent]="'没有符合检索条件的用户'">
+          <ng-container *ngFor="let user of userList">
+            <nz-option *ngIf="!isLoading" [nzValue]="user.id" [nzLabel]="user.name" nzCustomContent>
+              <div nz-row>
+                <div nz-col nzSpan="8">
+                  <i class="anticon anticon-user"></i>
+                  <i>{{user.name}}</i>
+                </div>
+                <div nz-col nzSpan="16">
+                  <i class="anticon anticon-home"></i>
+                  <i>{{user.country}}</i>
+                </div>
+              </div>
+            </nz-option>
+          </ng-container>
+          <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+            <i class="anticon anticon-loading anticon-spin loading-icon"></i> 加载数据...
+          </nz-option>
+        </nz-select>
+      </nz-input-group>
     </div>
-    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
-      <nz-input style="width:100%;" [(ngModel)]="search.phone">
-        <ng-template #addOnBefore>
-          <span>手机号:</span>
-        </ng-template>
-      </nz-input>
-    </div>
-    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
+    <div nz-col [nzXs]="10" [nzSm]="10" [nzMd]="10">
       <nz-select style="width: 100%;" nzAllowClear [nzPlaceHolder]="'选择单子状态'" [(ngModel)]="search.status" nzShowSearch>
         <nz-option *ngFor="let option of statusOptions" [nzLabel]="option.label" [nzValue]="option.value" [nzDisabled]="option.disabled">
         </nz-option>
       </nz-select>
     </div>
-    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
+    <div nz-col [nzXs]="4" [nzSm]="4" [nzMd]="4">
       <button nz-button [nzType]="'primary'" (click)="doSearch()">
         <span>搜索</span>
       </button>
     </div>
   </div>
   <div style="padding-top:13px;">
-    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="list" [nzIsPagination]="false" [nzShowTitle]="checkedNumber">
-      <div nz-table-title>
-        <div>
-          <div>
-            <span style="margin-left: 8px;" *ngIf="checkedNumber">
-              <span>选择了 {{checkedNumber}} 单, 共 </span>
-              <span style="color:red;">{{checkedItemCount}}</span>
-              <span> 箱.</span>
-              <a style="padding-left:5px;" href="javascript:void(0);" (click)="addToCar()">加入车次</a>
-              <a style="padding-left:5px;" href="javascript:void(0);" (click)="removeFromCar()">全部移出车次</a>
-            </span>
-          </div>
-        </div>
-      </div>
+    <nz-table #tableData [nzData]="list" [nzSize]="'default'" [nzShowPagination]="false" [nzNoResult]="'没有数据'">
       <thead nz-thead>
         <tr>
-          <th nz-th nzCheckbox>
-            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
-          </th>
           <th nz-th class="nowrap">
             <span>单号</span>
           </th>
           <th nz-th class="nowrap">
             <span>姓名</span>
-          </th>
-          <th nz-th class="nowrap">
-            <span>手机</span>
           </th>
           <th nz-th class="nowrap">
             <span>数量</span>
@@ -65,27 +55,21 @@
           <th nz-th class="nowrap sm-hidden">
             <span>时间</span>
           </th>
-          <th nz-th class="nowrap">
+          <th nz-th class="nowrap" style="width:200px;">
             <span>操作</span>
           </th>
         </tr>
       </thead>
       <tbody nz-tbody>
-        <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
-          <td nz-td nzCheckbox>
-            <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="refreshStatus($event)"></label>
-          </td>
+        <tr nz-tbody-tr *ngFor="let item of list; let i = index">
           <td nz-td style="width:100px;">
             <span>{{item.id}}</span>
           </td>
           <td nz-td>
-            <span>{{item.seller}}</span>
+            <span>{{item.user}}</span>
           </td>
           <td nz-td>
-            <span>{{item.phone}}</span>
-          </td>
-          <td nz-td>
-            <span>{{itemCount(item)}}</span>
+            <span>{{item.count || 0}}</span>
           </td>
           <td nz-td>
             <nz-tag [nzColor]="statusColor(item.status)">{{statusName(item.status)}}</nz-tag>
@@ -93,7 +77,7 @@
           <td nz-td class="sm-hidden">
             <span>{{item.createdAt}}</span>
           </td>
-          <td nz-td style="padding-left:8px;">
+          <td nz-td style="padding-left:8px;" class="nowrap">
             <button *ngIf="canBeDeprecated(item)" [nzSize]="'small'" nz-button [nzType]="'danger'" (click)="doDeprecate(item)">
               <i class="anticon anticon-inbox"></i>
               <span style="margin:0px;">废弃</span>
@@ -128,8 +112,10 @@
   </div>
   <div>
     <div *ngIf="list && list.length > 0" style="margin-top:15px;margin-bottom:15px;padding-left:15px;">
-      <nz-pagination [(nzPageIndex)]="current" [nzTotal]="total" [(nzPageSize)]="size" [nzSize]="'small'" nzShowTotal nzShowSizeChanger
-        (nzPageIndexChange)="load()" (nzPageSizeChange)="load()"></nz-pagination>
+      <nz-pagination [(nzPageIndex)]="current" [nzTotal]="total" [(nzPageSize)]="size" [nzSize]="'small'" [nzShowTotal]="totalTemplate"
+        (nzPageIndexChange)="load()" (nzPageSizeChange)="load()" [nzShowSizeChanger]="true" [nzPageSizeOptions]="[10, 20, 50, 100]">
+      </nz-pagination>
+      <ng-template #totalTemplate let-total>共 {{total}} 条</ng-template>
     </div>
-  </div> -->
+  </div>
 </div>

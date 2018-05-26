@@ -6,14 +6,10 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import {
-  API_ORDER_ITEM_BATCH_UPDATE_CAR,
-  API_ORDER_DELETE,
-  API_ORDER_QUERY,
-  API_ORDER_UPDATE,
-} from '../../api/egg.api'
+import { API_ORDER_DELETE, API_ORDER_QUERY, API_ORDER_UPDATE, API_USER_QUERY } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
-import { ListShopOrderItem, OrderStatus, ShopOrder } from '../../model/egg.model'
+import { ListShopOrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   templateUrl: './shop-order-list.component.html',
@@ -21,11 +17,6 @@ import { ListShopOrderItem, OrderStatus, ShopOrder } from '../../model/egg.model
 })
 export class ShopOrderListComponent implements OnInit {
 
-  allChecked = false
-  indeterminate = false
-  checkedNumber = 0
-  checkedItemCount = 0
-  checkedItems: ListShopOrderItem[] = []
   search: ShopOrder = {}
   total = 0
   current = 1
@@ -37,9 +28,9 @@ export class ShopOrderListComponent implements OnInit {
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
   list: ListShopOrderItem[] = []
-  countMap: { [key: number]: number } = {}
-
-
+  isLoading = false
+  searchChange = new BehaviorSubject('')
+  userList: ShopUser[] = []
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -49,55 +40,20 @@ export class ShopOrderListComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
-  refreshStatus() {
-    const allChecked = this.list.every(value => value.checked === true)
-    const allUnChecked = this.list.every(value => !value.checked)
-    this.allChecked = allChecked
-    this.indeterminate = (!allChecked) && (!allUnChecked)
-    this.checkedItems = this.list.filter(value => value.checked)
-    this.checkedNumber = this.checkedItems.length
-    let total = 0
-    this.checkedItems.forEach(item => {
-      const count = this.countMap[item.id]
-      if (count) {
-        total += count
-      }
-    })
-    this.checkedItemCount = total
-  }
-  checkAll(value) {
-    if (value) {
-      this.list.forEach(item => {
-        item.checked = true
-      })
-    } else {
-      this.list.forEach(item => {
-        item.checked = false
-      })
-    }
-    this.refreshStatus()
-  }
-  itemCount(item: ShopOrder) {
-    if (this.countMap) {
-      const count = this.countMap[item.id]
-      if (count) {
-        return count
-      } else {
-        return 0
-      }
-    } else {
-      return 0
-    }
+  onSearchUser(value: string): void {
+    this.isLoading = true;
+    this.searchChange.next(value);
   }
   doSearch() {
     this.current = 1
     this.load()
   }
   load() {
-    this.http.post<ApiRes<ShopOrder[]>>(API_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
+    this.http.post<ApiRes<ListShopOrderItem[]>>(
+      API_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }
+    ).subscribe(res => {
       this.list = res.data.list
       this.total = res.data.total
-      this.countMap = res.data['count']
     })
   }
   statusColor(status: string) {
@@ -184,7 +140,7 @@ export class ShopOrderListComponent implements OnInit {
       nzTitle: '删除',
       nzContent: `确认删除吗,删除后所有关联数据将不可找回?`,
       nzOnOk: () => {
-        const order: ShopOrder = { id: item.id, status: OrderStatus.NEW }
+        const order: ShopOrder = { id: item.id }
         this.http.post<ApiRes<ShopOrder>>(API_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')
           this.load()
@@ -194,5 +150,16 @@ export class ShopOrderListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.load()
+    this.searchChange.debounceTime(300).subscribe(value => {
+      const user: ShopUser = { name: value }
+      this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, user).subscribe(res => {
+        if (res.data.length > 0) {
+          this.userList = res.data
+        } else {
+          this.userList = []
+        }
+        this.isLoading = false
+      })
+    })
   }
 }

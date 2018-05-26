@@ -13,7 +13,6 @@ export interface ShopUser {
 export interface ShopOrder {
   id?: number
   user?: number
-  phone?: string
   bill?: string
   status?: string
   remark?: string
@@ -21,8 +20,13 @@ export interface ShopOrder {
   updatedAt?: string
 }
 
-export interface ListShopOrderItem extends ShopOrder {
-  checked?: boolean
+export interface ListShopOrderItem {
+  id?: number
+  user?: number
+  count?: number
+  status?: string
+  remark?: string
+  createdAt?: string
 }
 
 export const OrderStatus = {

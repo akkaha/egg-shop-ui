@@ -58,7 +58,7 @@ export class ShopOrderPayComponent implements OnInit {
   doFinish() {
     this.modal.create({
       nzTitle: `确认完成`,
-      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.user}, 手机: ${this.order.phone}, 数量: ${this.bill.totalCount}.`,
+      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.user},  数量: ${this.bill.totalCount}.`,
       nzOnOk: () => {
         const toUpdate = clearOrderField(this.order)
         toUpdate.status = OrderStatus.FINISHED
