@@ -10,3 +10,9 @@ i.click-icon:active {
   font-weight: bold;
   cursor: pointer;
 }
+
+.egg-avatar {
+  vertical-align: middle;
+  background-color: white;
+  font-size: xx-large
+}

@@ -9,6 +9,7 @@ import {
   API_ORDER_DETAIL,
   API_ORDER_INSERT,
   API_ORDER_ITEM_DEC,
+  API_ORDER_ITEM_DELETE,
   API_ORDER_ITEM_INC,
   API_ORDER_UPDATE,
   API_USER_QUERY,
@@ -16,6 +17,7 @@ import {
 import { ApiRes } from '../../model/api.model'
 import { OrderDetail, OrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
 import { mathIsNumeric, mathSort } from '../../util/math-util'
+import { ShopOrderItemComponent } from '../shop-order-item/shop-order-item.component'
 
 @Component({
   templateUrl: './shop-order.component.html',
@@ -29,7 +31,7 @@ export class ShopOrderComponent implements OnInit {
   gridStyle = {
     width: '25%',
     textAlign: 'center',
-    padding: '10px'
+    padding: '4px'
   }
   sixWeights: LevelWeightItem[] = []
   sevenWeights: LevelWeightItem[] = []
@@ -39,6 +41,7 @@ export class ShopOrderComponent implements OnInit {
   SHOP_ORDER_WEIGHTS = 'SHOP_ORDER_WEIGHTS'
   isLoading = false
   searchChange = new Subject<string>()
+  remarkSubject = new Subject<string>()
   userList: ShopUser[] = []
   user: ShopUser = {}
   selectedUser: ShopUser = {}
@@ -56,6 +59,39 @@ export class ShopOrderComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
+  remarkChange() {
+    this.remarkSubject.next(this.order.remark)
+  }
+  removeItem(item: OrderItem) {
+    this.modal.confirm({
+      nzTitle: `确认删除?`,
+      nzContent: `重量:${item.weight}, 数量: ${item.count}`,
+      nzOnOk: () => {
+        this.http.post<ApiRes<OrderItem>>(API_ORDER_ITEM_DELETE, { id: item.id }).subscribe(res => {
+          this.message.success('成功')
+          this.load(this.order.id)
+        })
+      }
+    })
+  }
+  newWeightLevel(level: number) {
+    const item: OrderItem = {
+      level: level,
+      user: this.order.user,
+      order: this.order.id
+    }
+    this.modal.create({
+      nzTitle: `新增 ${level} 重量`,
+      nzContent: ShopOrderItemComponent,
+      nzFooter: null,
+      nzComponentParams: {
+        data: item,
+        onSaved: function () {
+          this.load(this.order.id)
+        }.bind(this)
+      },
+    })
+  }
   plusItemCount(item: OrderItem) {
     this.http.post<ApiRes<{ item: number, total: number }>>(API_ORDER_ITEM_INC, item).subscribe(res => {
       item.count = res.data.item
@@ -128,6 +164,7 @@ export class ShopOrderComponent implements OnInit {
           this.sixWeights = mathSort(sixNums).map(num => {
             return { 'weight': num }
           })
+          this.saveWeightLevel()
         } else {
           this.message.warning('必须全为数字')
         }
@@ -138,6 +175,7 @@ export class ShopOrderComponent implements OnInit {
           this.sevenWeights = mathSort(sevenNums).map(num => {
             return { 'weight': num }
           })
+          this.saveWeightLevel()
         } else {
           this.message.warning('必须全为数字')
         }
@@ -169,7 +207,7 @@ export class ShopOrderComponent implements OnInit {
       nzTitle: `编号:${this.order.id}, 确认提交?`,
       nzContent: `${this.order.remark}<br>数量: ${this.totalCount}`,
       nzOnOk: () => {
-        const order: ShopOrder = { id: this.order.id, status: OrderStatus.COMMITED, remark: this.order.remark || '' }
+        const order: ShopOrder = { id: this.order.id, status: OrderStatus.COMMITED }
         this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
           this.router.navigate(['/shop-order-list'])
         })
@@ -178,6 +216,27 @@ export class ShopOrderComponent implements OnInit {
   }
   goBack() {
     this.router.navigate(['/shop-order-list'])
+  }
+  load(id: number) {
+    this.http.get<ApiRes<{ order: ShopOrder, items: OrderItem[], user: ShopUser, total: number }>>
+      (`${API_ORDER_DETAIL}/${id}`).subscribe(res => {
+        this.selectedUser = res.data.user || {}
+        this.user = { ...this.selectedUser }
+        this.userList.push(this.selectedUser)
+        this.order = res.data.order
+        this.totalCount = res.data.total
+        const tmpSix: OrderItem[] = []
+        const tmpSeven: OrderItem[] = []
+        res.data.items.forEach(item => {
+          if (item.level === 6) {
+            tmpSix.push(item)
+          } else if (item.level === 7) {
+            tmpSeven.push(item)
+          }
+        })
+        this.sixWeightItems = tmpSix
+        this.sevenWeightItems = tmpSeven
+      })
   }
   ngOnInit(): void {
     this.searchChange.debounceTime(300).subscribe(value => {
@@ -191,6 +250,11 @@ export class ShopOrderComponent implements OnInit {
         this.isLoading = false
       })
     })
+    this.remarkSubject.debounceTime(300).subscribe((remark) => {
+      const order: ShopOrder = { id: this.order.id, remark: remark }
+      this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
+      })
+    })
     this.route.queryParams.subscribe(query => {
       if (query.hasOwnProperty('readonly')) {
         this.readonly = true
@@ -201,25 +265,7 @@ export class ShopOrderComponent implements OnInit {
       if (id) {
         // edit or view
         this.orderCreated = true
-        this.http.get<ApiRes<{ order: ShopOrder, items: OrderItem[], user: ShopUser, total: number }>>
-          (`${API_ORDER_DETAIL}/${id}`).subscribe(res => {
-            this.selectedUser = res.data.user || {}
-            this.user = { ...this.selectedUser }
-            this.userList.push(this.selectedUser)
-            this.order = res.data.order
-            this.totalCount = res.data.total
-            const tmpSix: OrderItem[] = []
-            const tmpSeven: OrderItem[] = []
-            res.data.items.forEach(item => {
-              if (item.level === 6) {
-                tmpSix.push(item)
-              } else if (item.level === 7) {
-                tmpSeven.push(item)
-              }
-            })
-            this.sixWeightItems = tmpSix
-            this.sevenWeightItems = tmpSeven
-          })
+        this.load(id)
       } else {
         // new
         const weigths = localStorage.getItem(this.SHOP_ORDER_WEIGHTS)

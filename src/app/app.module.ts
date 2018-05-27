@@ -11,6 +11,7 @@ import { AppComponent } from './app.component'
 import { HomeComponent } from './components/home/home.component'
 import { PayPatternComponent } from './components/pay-pattern/pay-pattern.component'
 import { PopInuptComponent } from './components/pop-input/pop-inupt.component'
+import { ShopOrderItemComponent } from './components/shop-order-item/shop-order-item.component'
 import { ShopOrderListComponent } from './components/shop-order-list/shop-order-list.component'
 import { ShopOrderPayComponent } from './components/shop-order-pay/shop-order-pay.component'
 import { ShopOrderPrintComponent } from './components/shop-order-print/shop-order-print.component'
@@ -30,9 +31,11 @@ import { ShopUserComponent } from './components/shop-user/shop-user.component'
     ShopOrderPrintComponent,
     ShopUserListComponent,
     ShopUserComponent,
+    ShopOrderItemComponent,
   ],
   entryComponents: [
-    ShopUserComponent
+    ShopUserComponent,
+    ShopOrderItemComponent,
   ],
   imports: [
     BrowserModule,

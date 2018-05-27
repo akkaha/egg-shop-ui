@@ -54,7 +54,7 @@
       </div>
       <div nz-col nzSpan="24" style="padding-top: 5px;">
         <nz-input-group nzAddOnBefore="备注">
-          <textarea nz-input [(ngModel)]="order.remark" row="2" [readonly]="false"></textarea>
+          <textarea nz-input [(ngModel)]="order.remark" (ngModelChange)="remarkChange()" row="2" [readonly]="readonly"></textarea>
         </nz-input-group>
       </div>
     </div>
@@ -91,43 +91,63 @@
     </div>
     <div *ngIf="orderCreated">
       <nz-card *ngIf="sixWeightItems.length>0" style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle"
-        nzTitle="六层计数" [nzExtra]="extraTemplate6">
+        nzTitle="六层" [nzExtra]="extraTemplate6">
         <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sixWeightItems; let i=index">
-          <div nz-row>
-            <div nz-col [nzSpan]="24">
-              <nz-button-group style="width:100%;" [nzSize]="large">
-                <button nz-button nzType="default">
-                  <span style="color:purple;">重: {{item.weight}}</span>
-                </button>
-                <button nz-button nzType="default">
-                  <span style="color:green;">数量: {{item.count}}</span>
-                </button>
-                <button *ngIf="!readonly" nz-button nzType="primary" (click)="plusItemCount(item)">加</button>
-                <button *ngIf="!readonly" nz-button nzType="primary" (click)="minusItemCount(item)">减</button>
-              </nz-button-group>
-            </div>
-          </div>
+          <nz-card style="width:100%;" [nzActions]="readonly ? [] : [actionDelete,actionPlus,actionMinus]">
+            <nz-card-meta [nzTitle]="metaTitle" [nzDescription]="metaDesc" [nzAvatar]="avatarTemplate"></nz-card-meta>
+            <ng-template #metaTitle>
+              <span>{{item.count}}</span>
+            </ng-template>
+            <ng-template #metaDesc>
+              <span>六层重量: {{item.weight}} 斤</span>
+            </ng-template>
+          </nz-card>
+          <ng-template #avatarTemplate>
+            <nz-avatar [nzText]="'🥚'" nzSize="default" class="egg-avatar"></nz-avatar>
+          </ng-template>
+          <ng-template #actionDelete>
+            <i class="anticon anticon-delete click-icon" (click)="removeItem(item)"></i>
+          </ng-template>
+          <ng-template #actionPlus>
+            <i class="anticon anticon-plus click-icon" (click)="plusItemCount(item)"></i>
+          </ng-template>
+          <ng-template #actionMinus>
+            <i class="anticon anticon-minus click-icon" (click)="minusItemCount(item)"></i>
+          </ng-template>
         </div>
       </nz-card>
+      <ng-template #extraTemplate6>
+        <a *ngIf="!readonly" class="click-icon" (click)="newWeightLevel(6)">添加</a>
+      </ng-template>
       <nz-card *ngIf="sevenWeightItems.length>0" style="width:100%;margin-top:7px;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle"
-        nzTitle="七层计数" [nzExtra]="extraTemplate7">
+        nzTitle="七层" [nzExtra]="extraTemplate7">
         <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sevenWeightItems; let i=index">
-          <div nz-row>
-            <div nz-col [nzSpan]="24">
-              <nz-button-group style="width:100%;" [nzSize]="large">
-                <button nz-button nzType="default">
-                  <span style="color:purple;">重: {{item.weight}}</span>
-                </button>
-                <button nz-button nzType="default">
-                  <span style="color:green;">数量: {{item.count}}</span>
-                </button>
-                <button *ngIf="!readonly" nz-button nzType="primary" (click)="plusItemCount(item)">加</button>
-                <button *ngIf="!readonly" nz-button nzType="primary" (click)="minusItemCount(item)">减</button>
-              </nz-button-group>
-            </div>
-          </div>
+          <nz-card style="width:100%;" [nzActions]="readonly ? [] : [actionDelete,actionPlus,actionMinus]">
+            <nz-card-meta [nzTitle]="metaTitle" [nzDescription]="metaDesc" [nzAvatar]="avatarTemplate"></nz-card-meta>
+            <ng-template #metaTitle>
+              <span>{{item.count}}</span>
+            </ng-template>
+            <ng-template #metaDesc>
+              <span>七层重量: {{item.weight}} 斤</span>
+            </ng-template>
+          </nz-card>
+          <ng-template #avatarTemplate>
+            <nz-avatar [nzText]="'🥚'" nzSize="default" class="egg-avatar"></nz-avatar>
+          </ng-template>
+          <ng-template #actionDelete>
+            <i class="anticon anticon-delete click-icon" (click)="removeItem(item)"></i>
+          </ng-template>
+          <ng-template #actionPlus>
+            <i class="anticon anticon-plus click-icon" (click)="plusItemCount(item)"></i>
+          </ng-template>
+          <ng-template #actionMinus>
+            <i class="anticon anticon-minus click-icon" (click)="minusItemCount(item)"></i>
+          </ng-template>
         </div>
       </nz-card>
+      <ng-template #extraTemplate7>
+        <a *ngIf="!readonly" class="click-icon" (click)="newWeightLevel(7)">添加</a>
+      </ng-template>
     </div>
     <div style="padding-top: 16px;" nz-row>
       <div nz-col nzSpan="24">
