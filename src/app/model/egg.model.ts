@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject'
 
 export interface ShopUser {
   id?: number
@@ -57,6 +57,10 @@ export interface OrderItem {
 export interface BillItem {
   weight?: string
   price?: string
+  level?: number
+  count?: number
+  totalWeight?: string
+  totalPrice?: string
 }
 
 export interface PriceExtra {
@@ -65,6 +69,13 @@ export interface PriceExtra {
   weightAdjust?: string
 }
 
+export interface OrderBillSummary {
+  totalCount?: number
+  totalWeight?: string
+  meanWeight?: string
+  totalPrice?: string
+  meanPrice?: string
+}
 export interface OrderBill {
   date?: string
   totalCount?: number
@@ -73,7 +84,10 @@ export interface OrderBill {
   totalPrice?: string
   meanPrice?: string
   items?: BillItem[]
-  priceRange?: Object
+  sixSUmmary?: OrderBillSummary
+  sevenSummary?: OrderBillSummary
+  sixPriceRange?: Object
+  sevenPriceRange?: Object
   remark?: string
   priceExtra?: PriceExtra
 }

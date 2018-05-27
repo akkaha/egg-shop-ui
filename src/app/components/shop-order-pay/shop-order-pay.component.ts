@@ -11,7 +11,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
 import { API_ORDER_PAY, API_ORDER_UPDATE } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
-import { clearOrderField, OrderBill, OrderStatus, PriceExtra, ShopOrder } from '../../model/egg.model'
+import { clearOrderField, OrderBill, OrderStatus, PriceExtra, ShopOrder, ShopUser } from '../../model/egg.model'
 
 @Component({
   templateUrl: './shop-order-pay.component.html',
@@ -20,15 +20,14 @@ import { clearOrderField, OrderBill, OrderStatus, PriceExtra, ShopOrder } from '
 export class ShopOrderPayComponent implements OnInit {
 
   order: ShopOrder = {}
+  user: ShopUser = {}
   bill: OrderBill = {
     items: [],
-    priceRange: {}
   }
   readonly = true
   tablePageIndex = 1
   tablePageSize = 10
-  pageSizeSelectorValues = [10, 20, 30, 40, 50, 100, 200, 500]
-  defaultCar: ShopOrder
+  pageSizeOptions = [10, 20, 30, 40, 50, 100]
   popVisible = {}
   orderPayRes: OrderPayRes = {}
   weightAdjustStr = ''
@@ -42,13 +41,6 @@ export class ShopOrderPayComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
-  descCar(car: ShopOrder) {
-    if (car) {
-      return `单号: ${car.id}, 姓名:, 日期: ${car.createdAt}`
-    } else {
-      return '未选择'
-    }
-  }
   itemIndex(index: number) {
     return (this.tablePageIndex - 1) * this.tablePageSize + index
   }
@@ -58,7 +50,7 @@ export class ShopOrderPayComponent implements OnInit {
   doFinish() {
     this.modal.create({
       nzTitle: `确认完成`,
-      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.user},  数量: ${this.bill.totalCount}.`,
+      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.user}, 数量: ${this.bill.totalCount}, 金额: ${this.bill.totalPrice}.`,
       nzOnOk: () => {
         const toUpdate = clearOrderField(this.order)
         toUpdate.status = OrderStatus.FINISHED
@@ -114,11 +106,9 @@ export class ShopOrderPayComponent implements OnInit {
       if (id) {
         this.http.get<ApiRes<OrderPayRes>>(`${API_ORDER_PAY}/${id}`).subscribe(res => {
           this.orderPayRes = res.data
-          if (res.data.car) {
-            this.defaultCar = res.data.car
-          }
           this.order = res.data.order
           this.bill = res.data.bill
+          this.user = res.data.user
           this.setWeightAdjustStr()
         })
       }
@@ -129,6 +119,6 @@ export class ShopOrderPayComponent implements OnInit {
 export interface OrderPayRes {
   order?: ShopOrder
   bill?: OrderBill
-  car?: ShopOrder
+  user?: ShopUser
   priceExtra?: PriceExtra
 }

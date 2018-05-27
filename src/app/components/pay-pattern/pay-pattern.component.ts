@@ -23,7 +23,8 @@ import { OrderPayRes } from '../shop-order-pay/shop-order-pay.component'
 export class PayPatternComponent implements OnInit {
 
   bill: OrderBill = {}
-  _date: Date = null
+  _date: Date = new Date()
+  currentDay = moment(this._date).format('YYYY-MM-DD')
   readonly = false
   priceEditable = false
   /** used for edit and update */
@@ -37,12 +38,21 @@ export class PayPatternComponent implements OnInit {
   set data(val: OrderPayRes) {
     this.bill = val.bill
     this.checkMissedWeights()
-    if (this.bill && this.bill.priceRange) {
-      const priceRange = this.bill.priceRange
+    if (this.bill) {
       const tmpPrices: BillItem[] = []
-      // tslint:disable-next-line:forin
-      for (const k in priceRange) {
-        tmpPrices.push({ weight: k, price: priceRange[k] })
+      const sixPriceRange = this.bill.sixPriceRange
+      if (sixPriceRange) {
+        // tslint:disable-next-line:forin
+        for (const k in sixPriceRange) {
+          tmpPrices.push({ weight: k, price: sixPriceRange[k], level: 6 })
+        }
+      }
+      const sevenPriceRange = this.bill.sevenPriceRange
+      if (sevenPriceRange) {
+        // tslint:disable-next-line:forin
+        for (const k in sevenPriceRange) {
+          tmpPrices.push({ weight: k, price: sevenPriceRange[k], level: 7 })
+        }
       }
       this.prices = tmpPrices
     }
@@ -53,6 +63,11 @@ export class PayPatternComponent implements OnInit {
     }
     if (val.priceExtra) {
       this.priceExtra = { ...val.priceExtra }
+    } else {
+      // order finished
+      if (this.bill && this.bill.priceExtra) {
+        this.priceExtra = { ...this.bill.priceExtra }
+      }
     }
   }
   @Output() calc: EventEmitter<string> = new EventEmitter()
@@ -110,12 +125,15 @@ export class PayPatternComponent implements OnInit {
       this.priceEditable = false
     })
   }
-  doAddPrice() {
-    this.prices.push({})
+  doAddSixPrice() {
+    this.prices.push({ level: 6 })
+    this.prices = [...this.prices]
+  }
+  doAddSevenPrice() {
+    this.prices.push({ level: 7 })
     this.prices = [...this.prices]
   }
   doCraete() {
-    this.doAddPrice()
     this.doEdit()
   }
   doEdit() {

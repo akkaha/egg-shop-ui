@@ -2,29 +2,33 @@
   <div>
     <div *ngIf="!orderCreated" nz-row [nzGutter]="3" style="padding-bottom:7px;">
       <div nz-col nzSpan="12">
-        <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="selectedUser" (ngModelChange)="selectedUserChange($event)"
-          nzPlaceHolder="选择用户" nzAllowClear nzShowSearch [nzServerSearch]="true" (nzOnSearch)="onSearchUser($event)">
-          <ng-container *ngFor="let user of userList">
-            <nz-option *ngIf="!isLoading" [nzValue]="user" [nzLabel]="user.name" nzCustomContent>
-              <div nz-row>
-                <div nz-col nzSpan="8">
-                  <i class="anticon anticon-user"></i>
-                  <i>{{user.name}}</i>
+        <nz-input-group nzAddOnBefore="选择用户">
+          <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="selectedUser" (ngModelChange)="selectedUserChange($event)"
+            nzPlaceHolder="选择用户" nzAllowClear nzShowSearch [nzServerSearch]="true" (nzOnSearch)="onSearchUser($event)">
+            <ng-container *ngFor="let user of userList">
+              <nz-option *ngIf="!isLoading" [nzValue]="user" [nzLabel]="user.name" nzCustomContent>
+                <div nz-row>
+                  <div nz-col nzSpan="8">
+                    <i class="anticon anticon-user"></i>
+                    <i>{{user.name}}</i>
+                  </div>
+                  <div nz-col nzSpan="16">
+                    <i class="anticon anticon-home"></i>
+                    <i>{{user.country}}</i>
+                  </div>
                 </div>
-                <div nz-col nzSpan="16">
-                  <i class="anticon anticon-home"></i>
-                  <i>{{user.country}}</i>
-                </div>
-              </div>
+              </nz-option>
+            </ng-container>
+            <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+              <i class="anticon anticon-loading anticon-spin loading-icon"></i> 加载数据...
             </nz-option>
-          </ng-container>
-          <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-            <i class="anticon anticon-loading anticon-spin loading-icon"></i> 加载数据...
-          </nz-option>
-        </nz-select>
+          </nz-select>
+        </nz-input-group>
       </div>
       <div nz-col nzSpan="12">
-        <input nz-input placeholder="所在地" [(ngModel)]="user.country" [readonly]="!countryEditable">
+        <nz-input-group nzAddOnBefore="所在地">
+          <input nz-input placeholder="所在地" [(ngModel)]="user.country" [readonly]="!countryEditable">
+        </nz-input-group>
       </div>
     </div>
     <div *ngIf="orderCreated" nz-row [nzGutter]="3" style="padding-bottom:7px;">
@@ -44,8 +48,13 @@
         </nz-input-group>
       </div>
       <div nz-col nzSpan="10">
-        <nz-input-group nzAddOnBefore="村庄">
+        <nz-input-group nzAddOnBefore="地址">
           <input nz-input [(ngModel)]="user.country" [readonly]="true">
+        </nz-input-group>
+      </div>
+      <div nz-col nzSpan="24" style="padding-top: 5px;">
+        <nz-input-group nzAddOnBefore="备注">
+          <textarea nz-input [(ngModel)]="order.remark" row="2" [readonly]="false"></textarea>
         </nz-input-group>
       </div>
     </div>

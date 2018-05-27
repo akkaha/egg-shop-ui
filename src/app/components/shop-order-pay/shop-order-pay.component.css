@@ -10,3 +10,12 @@ i.click-icon:active {
   font-weight: bold;
   cursor: pointer;
 }
+
+div.border {
+  background-color:white;
+  height:100%;
+  border:solid lightblue;
+  border-width:1px;
+  border-radius:5px;
+  padding: 5px;
+}

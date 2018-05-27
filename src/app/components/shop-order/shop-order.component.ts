@@ -76,20 +76,7 @@ export class ShopOrderComponent implements OnInit {
         sevenWeights: this.sevenWeights.map(item => item.weight)
       }
       this.http.post<ApiRes<OrderDetail>>(API_ORDER_INSERT, newOrder).subscribe(res => {
-        this.orderCreated = true
-        this.countryEditable = false
-        const sixTemp: OrderItem[] = []
-        const seventTemp: OrderItem[] = []
-        res.data.items.forEach(item => {
-          if (item.level === 6) {
-            sixTemp.push(item)
-          } else if (item.level === 7) {
-            seventTemp.push(item)
-          }
-        })
-        this.sixWeightItems = sixTemp
-        this.sevenWeightItems = seventTemp
-        this.order = res.data.order
+        this.router.navigate([`/shop-order/${res.data.order.id}`])
       })
     } else {
       this.message.warning('请选择用户')
@@ -179,10 +166,10 @@ export class ShopOrderComponent implements OnInit {
   }
   doCommit() {
     this.modal.confirm({
-      nzTitle: `确认提交?`,
-      nzContent: `编号: ${this.order.id}`,
+      nzTitle: `编号:${this.order.id}, 确认提交?`,
+      nzContent: `${this.order.remark}<br>数量: ${this.totalCount}`,
       nzOnOk: () => {
-        const order: ShopOrder = { id: this.order.id, status: OrderStatus.COMMITED }
+        const order: ShopOrder = { id: this.order.id, status: OrderStatus.COMMITED, remark: this.order.remark || '' }
         this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
           this.router.navigate(['/shop-order-list'])
         })

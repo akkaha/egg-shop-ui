@@ -41,9 +41,11 @@
             <span>{{item.phone}}</span>
           </td>
           <td nz-td style="padding-left:8px;" class="nowrap">
-            <button [nzSize]="'small'" nz-button [nzType]="'default'" (click)="doEdit(item)">
-              <i class="anticon anticon-edit"></i>
-              <span style="margin:0px;">编辑</span>
+            <button [nzSize]="'small'" nz-button [nzType]="'primary'" (click)="doEdit(item)">
+              <span style="margin:0px;">
+                <i class="anticon anticon-edit"></i>
+                <span>编辑</span>
+              </span>
             </button>
             <button style="color:coral;" nz-button [nzType]="'default'" [nzSize]="'small'" (click)="doDelete(item)">
               <i class="anticon anticon-delete"></i>

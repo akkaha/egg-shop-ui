@@ -12,7 +12,7 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 
 import { API_ORDER_PAY } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { BillItem, DefaultPrintConfig, OrderBill, PrintConfig, ShopOrder } from '../../model/egg.model';
+import { BillItem, DefaultPrintConfig, OrderBill, PrintConfig, ShopOrder, ShopUser } from '../../model/egg.model';
 import { PrintTable, toPrintTables } from '../../model/print.model';
 import { OrderPayRes } from '../shop-order-pay/shop-order-pay.component';
 
@@ -25,7 +25,7 @@ export class ShopOrderPrintComponent implements OnInit {
 
   order: ShopOrder = {}
   bill: OrderBill = {}
-  car: ShopOrder
+  user: ShopUser
   weightAdjustStr = ''
 
   values: BillItem[] = []
@@ -186,9 +186,7 @@ export class ShopOrderPrintComponent implements OnInit {
       const id = params['id']
       if (id) {
         this.http.get<ApiRes<OrderPayRes>>(`${API_ORDER_PAY}/${id}`).subscribe(res => {
-          if (res.data.car) {
-            this.car = res.data.car
-          }
+          this.user = res.data.user
           this.order = res.data.order
           this.bill = res.data.bill
           if (this.bill) {
