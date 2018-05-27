@@ -25,7 +25,7 @@ export class ShopOrderPrintComponent implements OnInit {
 
   order: ShopOrder = {}
   bill: OrderBill = {}
-  user: ShopUser
+  user: ShopUser = {}
   weightAdjustStr = ''
 
   values: BillItem[] = []

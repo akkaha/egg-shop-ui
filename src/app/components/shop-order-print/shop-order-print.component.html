@@ -1,64 +1,56 @@
 <div style="background-color:white;">
-  shop-order-input
-  <!-- <div class="non-printable print-control">
+  <div class="non-printable print-control">
     <div nz-row [nzGutter]="3">
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.title" (ngModelChange)="saveToLocal()">
-          <ng-template #addOnBefore>
-            <span>标题:</span>
-          </ng-template>
-        </nz-input>
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="标题">
+          <input nz-input [(ngModel)]="config.title" (ngModelChange)="saveToLocal()">
+        </nz-input-group>
       </div>
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.colCount" (ngModelChange)="colCountChange()">
-          <ng-template #addOnBefore>
-            <span>每行个数:</span>
-          </ng-template>
-        </nz-input>
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="每行个数">
+          <input nz-input [(ngModel)]="config.colCount" (ngModelChange)="colCountChange()">
+        </nz-input-group>
       </div>
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.empRowCount" (ngModelChange)="empRowCountChange()">
-          <ng-template #addOnBefore>
-            <span>空行个数:</span>
-          </ng-template>
-        </nz-input>
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="空行个数">
+          <input nz-input [(ngModel)]="config.empRowCount" (ngModelChange)="empRowCountChange()">
+        </nz-input-group>
       </div>
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.style.top" (ngModelChange)="colCountChange()">
-          <ng-template #addOnBefore>
-            <span>上内边距(mm):</span>
-          </ng-template>
-        </nz-input>
-      </div>
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.style.left" (ngModelChange)="colCountChange()">
-          <ng-template #addOnBefore>
-            <span>左内边距(mm):</span>
-          </ng-template>
-        </nz-input>
-      </div>
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.style.bottom" (ngModelChange)="colCountChange()">
-          <ng-template #addOnBefore>
-            <span>下内边距(mm):</span>
-          </ng-template>
-        </nz-input>
-      </div>
-      <div nz-col [nzSpan]="3">
-        <nz-input [(ngModel)]="config.style.right" (ngModelChange)="colCountChange()">
-          <ng-template #addOnBefore>
-            <span>右内边距(mm):</span>
-          </ng-template>
-        </nz-input>
-      </div>
-      <div nz-col [nzSpan]="3">
+      <div nz-col [nzSpan]="6">
         <button nz-button [nzType]="'primary'" (click)="print()">
-          <i class="anticon anticon-printer"></i>
-          <span style="margin:0px;">打印</span>
+          <span>
+            <i class="anticon anticon-printer"></i>
+            <span>打印</span>
+          </span>
         </button>
-        <button nz-button [nzSize]="'small'" [nzType]="'dash'" [nzShape]="'circle'" (click)="goBack()">
-          <i class="anticon anticon-rollback"></i>
+        <button nz-button [nzType]="'primary'" [nzShape]="'default'" (click)="goBack()">
+          <span>
+            <i class="anticon anticon-rollback"></i>
+            <span>返回</span>
+          </span>
         </button>
+      </div>
+    </div>
+    <div nz-row style="padding-top:3px;" [nzGutter]="3">
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="上内边距(mm)">
+          <input nz-input [(ngModel)]="config.style.top" (ngModelChange)="colCountChange()">
+        </nz-input-group>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="左内边距(mm)">
+          <input nz-input [(ngModel)]="config.style.left" (ngModelChange)="colCountChange()">
+        </nz-input-group>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="下内边距(mm)">
+          <input nz-input [(ngModel)]="config.style.bottom" (ngModelChange)="colCountChange()">
+        </nz-input-group>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-input-group nzAddOnBefore="右内边距(mm)">
+          <input nz-input [(ngModel)]="config.style.right" (ngModelChange)="colCountChange()">
+        </nz-input-group>
       </div>
     </div>
     <div nz-row style="padding-top:3px;" [nzGutter]="3">
@@ -100,11 +92,9 @@
     </div>
     <div nz-row style="padding-top:3px;" [nzGutter]="3">
       <div nz-col [nzSpan]="24">
-        <nz-input [(ngModel)]="config.weightGroups" (ngModelChange)="weightGroupsChange()" [nzPlaceHolder]="'数量分组数字, 从小到大，空格分开'">
-          <ng-template #addOnBefore>
-            <span>按重量划分:</span>
-          </ng-template>
-        </nz-input>
+        <nz-input-group nzAddOnBefore="按重量划分">
+          <input nz-input [(ngModel)]="config.weightGroups" (ngModelChange)="weightGroupsChange()" [placeholder]="'数量分组数字, 从小到大，空格分开'">
+        </nz-input-group>
       </div>
     </div>
   </div>
@@ -120,7 +110,7 @@
       <div nz-row [nzGutter]="3" style="padding:5px;">
         <div class="no-wrap" nz-col nzSpan="4">
           <span>姓名:</span>
-          <span class="value-text">{{order.seller}}</span>
+          <span class="value-text">{{user.name}}</span>
         </div>
         <div class="no-wrap" nz-col nzSpan="4">
           <span>件数:</span>
@@ -130,15 +120,17 @@
           <span>时间:</span>
           <span class="value-text">{{bill.date}}</span>
         </div>
-        <div class="no-wrap" nz-col nzSpan="5" style="text-align:right;padding-right:3px;">
-          <span>户单号:</span>
-          <span class="value-text">{{order.id}}</span>
+        <div class="no-wrap non-printable" nz-col nzSpan="5" style="text-align:right;">
+          <span style="padding-right:13px;">
+            <span>户单号:</span>
+            <span class="value-text">{{order.id}}</span>
+          </span>
         </div>
       </div>
     </div>
     <div *ngIf="tables.length>0" style="padding-top:3px;">
       <div *ngFor="let t of tables; let ti = index">
-        <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
+        <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzData]="values" [nzShowPagination]="false">
           <tbody nz-tbody>
             <tr *ngFor="let row of t.rows;let r = index">
               <td *ngFor="let col of t.cols;let c = index" nz-td [ngStyle]="tdStyle">
@@ -174,7 +166,7 @@
       </div>
     </div>
     <div *ngIf="tables.length<1" style="padding-top:3px;">
-      <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
+      <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzData]="values" [nzShowPagination]="false">
         <tbody nz-tbody>
           <tr *ngFor="let row of rows;let r = index">
             <td *ngFor="let col of cols;let c = index" nz-td style="padding:5px;color:black;">
@@ -204,5 +196,5 @@
         <span class="foot-text">{{order.remark}}</span>
       </div>
     </div>
-  </div> -->
+  </div>
 </div>

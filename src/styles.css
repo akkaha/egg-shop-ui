@@ -9,7 +9,7 @@
 }
 
 .print-container {
-  box-shadow: 0px 0px 20px wheat;
+  box-shadow: 0px 0px 20px lightslategrey;
   transition: All 0.4s ease-in-out;
   cursor: pointer;
 }
@@ -50,6 +50,9 @@
   }
   .print-container {
     box-shadow: 0px 0px;
+  }
+  .printable .non-printable {
+    display: none;
   }
   body * {
     font-size: 100%;
