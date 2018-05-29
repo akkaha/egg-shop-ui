@@ -1,0 +1,67 @@
+<div style="background-color:white;">
+  <div nz-row [nzGutter]="3">
+    <nz-date-picker [(ngModel)]="_date" (ngModelChange)="load()" [nzFormat]="'yyyy-MM-dd'"></nz-date-picker>
+    <button nz-button [nzType]="'primary'" [nzSize]="'default'" (click)="newPrice()">新增</button>
+  </div>
+  <div style="padding-top:13px;">
+    <nz-table #tableData [nzData]="list" [nzSize]="'default'" [nzShowPagination]="false" [nzNoResult]="'没有数据'">
+      <thead nz-thead>
+        <tr>
+          <th nz-th class="nowrap">
+            <span>日期</span>
+          </th>
+          <th nz-th class="nowrap">
+            <span>重量</span>
+          </th>
+          <th nz-th class="nowrap">
+            <span>加重</span>
+          </th>
+          <th nz-th class="nowrap sm-hidden">
+            <span>层数</span>
+          </th>
+          <th nz-th class="nowrap">
+            <span>价格</span>
+          </th>
+          <th nz-th class="nowrap" style="width:200px;">
+            <span>操作</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of tableData.data; let i = index">
+          <td nz-td>
+            <span>{{item.day}}</span>
+          </td>
+          <td nz-td>
+            <span>{{item.weight}}</span>
+          </td>
+          <td nz-td>
+            <span>{{extra[item.day]}}</span>
+          </td>
+          <td nz-td>
+            <span>{{item.level}}</span>
+          </td>
+          <td nz-td>
+            <span>{{item.price}}</span>
+          </td>
+          <td nz-td style="padding-left:8px;" class="nowrap">
+            <button [nzSize]="'small'" nz-button [nzType]="'primary'" (click)="doEdit(item)">
+              <span>
+                <i class="anticon anticon-edit"></i>
+                <span>编辑当天价格</span>
+              </span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div>
+    <div *ngIf="list && list.length > 0" style="margin-top:15px;margin-bottom:15px;padding-left:15px;">
+      <nz-pagination [(nzPageIndex)]="current" [nzTotal]="total" [(nzPageSize)]="size" [nzSize]="'small'" [nzShowTotal]="totalTemplate"
+        [nzShowSizeChanger]="true" [nzPageSizeOptions]="[10, 20, 50, 100]" (nzPageIndexChange)="doSearch()" (nzPageSizeChange)="doSearch()">
+      </nz-pagination>
+      <ng-template #totalTemplate let-total>共 {{total}} 条</ng-template>
+    </div>
+  </div>
+</div>

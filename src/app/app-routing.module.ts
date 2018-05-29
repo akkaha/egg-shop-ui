@@ -7,6 +7,7 @@ import { ShopOrderListComponent } from './components/shop-order-list/shop-order-
 import { ShopOrderPayComponent } from './components/shop-order-pay/shop-order-pay.component'
 import { ShopOrderPrintComponent } from './components/shop-order-print/shop-order-print.component'
 import { ShopOrderComponent } from './components/shop-order/shop-order.component'
+import { ShopPriceListComponent } from './components/shop-price-list/shop-price-list.component'
 import { ShopUserListComponent } from './components/shop-user-list/shop-user-list.component'
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'shop-order/:id', component: ShopOrderComponent },
   { path: 'shop-order-pay/:id', component: ShopOrderPayComponent },
   { path: 'shop-order-print/:id', component: ShopOrderPrintComponent },
+  { path: 'shop-price-list', component: ShopPriceListComponent },
   { path: '**', redirectTo: 'home' },
 ]
 

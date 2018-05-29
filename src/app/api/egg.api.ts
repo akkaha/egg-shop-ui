@@ -20,3 +20,7 @@ export const API_ORDER_ITEM_BATCH_UPDATE_CAR = BASE_URL + '/order-item/batch-upd
 
 export const API_ORDER_BILL_QUERY = BASE_URL + '/order-bill/query'
 export const API_ORDER_BILL_INSERT = BASE_URL + '/order-bill/insert'
+
+export const API_PRICE_QUERY = BASE_URL + '/price/query'
+export const API_PRICE_SAVE = BASE_URL + '/price/save'
+export const API_PRICE_DELETE = BASE_URL + '/price/delete'

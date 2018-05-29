@@ -11,11 +11,13 @@ import { AppComponent } from './app.component'
 import { HomeComponent } from './components/home/home.component'
 import { PayPatternComponent } from './components/pay-pattern/pay-pattern.component'
 import { PopInuptComponent } from './components/pop-input/pop-inupt.component'
+import { PriceExtraComponent } from './components/price-extra/price-extra.component'
 import { ShopOrderItemComponent } from './components/shop-order-item/shop-order-item.component'
 import { ShopOrderListComponent } from './components/shop-order-list/shop-order-list.component'
 import { ShopOrderPayComponent } from './components/shop-order-pay/shop-order-pay.component'
 import { ShopOrderPrintComponent } from './components/shop-order-print/shop-order-print.component'
 import { ShopOrderComponent } from './components/shop-order/shop-order.component'
+import { ShopPriceListComponent } from './components/shop-price-list/shop-price-list.component'
 import { ShopUserListComponent } from './components/shop-user-list/shop-user-list.component'
 import { ShopUserComponent } from './components/shop-user/shop-user.component'
 
@@ -32,10 +34,13 @@ import { ShopUserComponent } from './components/shop-user/shop-user.component'
     ShopUserListComponent,
     ShopUserComponent,
     ShopOrderItemComponent,
+    ShopPriceListComponent,
+    PriceExtraComponent,
   ],
   entryComponents: [
     ShopUserComponent,
     ShopOrderItemComponent,
+    PriceExtraComponent,
   ],
   imports: [
     BrowserModule,

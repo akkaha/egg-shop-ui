@@ -113,6 +113,14 @@ export interface PrintConfig {
   weightGroups?: string
 }
 
+export interface ShopPrice {
+  id?: string
+  day?: string
+  weight?: number
+  price?: number
+  level?: number
+}
+
 export const DefaultPrintConfig = {
   colCount: 10,
   empRowCount: 0,
