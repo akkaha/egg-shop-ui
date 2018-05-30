@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd'
+import { NgxEchartsModule } from 'ngx-echarts'
 
 import { AppRoutingModule } from './/app-routing.module'
 import { ApiCodeInterceptor } from './api/api-code.interceptor'
@@ -20,6 +21,7 @@ import { ShopOrderComponent } from './components/shop-order/shop-order.component
 import { ShopPriceListComponent } from './components/shop-price-list/shop-price-list.component'
 import { ShopUserListComponent } from './components/shop-user-list/shop-user-list.component'
 import { ShopUserComponent } from './components/shop-user/shop-user.component'
+import { ShopStatisticsComponent } from './components/shop-statistics/shop-statistics.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { ShopUserComponent } from './components/shop-user/shop-user.component'
     ShopOrderItemComponent,
     ShopPriceListComponent,
     PriceExtraComponent,
+    ShopStatisticsComponent
   ],
   entryComponents: [
     ShopUserComponent,
@@ -48,7 +51,8 @@ import { ShopUserComponent } from './components/shop-user/shop-user.component'
     HttpClientModule,
     BrowserAnimationsModule,
     NgZorroAntdModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    NgxEchartsModule,
   ],
   providers: [
     {
