@@ -51,9 +51,9 @@ export class ShopPriceListComponent implements OnInit {
       nzContent: PriceExtraComponent,
       nzFooter: null,
       nzComponentParams: {
-        data: item.id,
+        data: item.day,
         onSaved: function () {
-          this.searchChange.next('')
+          this.load()
         }.bind(this)
       },
     })

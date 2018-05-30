@@ -7,9 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router'
 import * as moment from 'moment'
 import { NzMessageService, NzModalRef } from 'ng-zorro-antd'
 
-import { API_ORDER_BILL_INSERT } from '../../api/egg.api'
-import { ApiResObj } from '../../model/api.model'
-import { BillItem, PriceExtra } from '../../model/egg.model'
+import { API_ORDER_BILL_INSERT, API_ORDER_BILL_QUERY } from '../../api/egg.api'
+import { ApiRes, ApiResObj } from '../../model/api.model'
+import { BillItem, PriceExtra, PriceItem } from '../../model/egg.model'
 
 @Component({
   templateUrl: './price-extra.component.html',
@@ -17,15 +17,18 @@ import { BillItem, PriceExtra } from '../../model/egg.model'
 export class PriceExtraComponent implements OnInit {
 
   _onSaved: Function
-  prices: BillItem[] = []
-  weightAdjust = ''
+  prices: PriceItem[] = []
   priceExtra: PriceExtra = {}
   _date
   errMsg = ''
   @Input()
   set data(val: string) {
     if (val) {
-      // todo get detail
+      this._date = new Date(val)
+      this.http.get<ApiRes<{ prices: PriceItem[], priceExtra: PriceExtra }>>(`${API_ORDER_BILL_QUERY}/${val}`).subscribe(res => {
+        this.priceExtra = res.data.priceExtra || {}
+        this.prices = res.data.prices
+      })
     }
   }
   @Input()

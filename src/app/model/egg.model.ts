@@ -63,6 +63,12 @@ export interface BillItem {
   totalPrice?: string
 }
 
+export interface PriceItem {
+  weight?: string
+  price?: string
+  level?: number
+}
+
 export interface PriceExtra {
   id?: number
   date?: string
