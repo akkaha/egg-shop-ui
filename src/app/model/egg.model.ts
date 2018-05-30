@@ -128,7 +128,7 @@ export interface ShopPrice {
 }
 
 export const DefaultPrintConfig = {
-  colCount: 10,
+  colCount: 2,
   empRowCount: 0,
   title: '🥚河北🥚',
   showBorder: false,

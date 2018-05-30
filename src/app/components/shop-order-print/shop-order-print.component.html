@@ -56,45 +56,13 @@
     <div nz-row style="padding-top:3px;" [nzGutter]="3">
       <div nz-col [nzSpan]="2">
         <label nz-checkbox [(ngModel)]="config.showBorder" (ngModelChange)="saveToLocal()">
-          <span>显示边框</span>
-        </label>
-      </div>
-      <div nz-col [nzSpan]="2">
-        <label nz-checkbox [(ngModel)]="config.showItemPrice" (ngModelChange)="saveToLocal()">
-          <span>显示单价</span>
-        </label>
-      </div>
-      <div nz-col [nzSpan]="2">
-        <label nz-checkbox [(ngModel)]="config.showTotalWeight" (ngModelChange)="saveToLocal()">
-          <span>显示总重</span>
-        </label>
-      </div>
-      <div nz-col [nzSpan]="2">
-        <label nz-checkbox [(ngModel)]="config.showMeanWeight" (ngModelChange)="saveToLocal()">
-          <span>显示均重</span>
-        </label>
-      </div>
-      <div nz-col [nzSpan]="2">
-        <label nz-checkbox [(ngModel)]="config.showTotalPrice" (ngModelChange)="saveToLocal()">
-          <span>显示总价</span>
+          <span>打印边框</span>
         </label>
       </div>
       <div nz-col [nzSpan]="2">
         <label nz-checkbox [(ngModel)]="config.showRemark" (ngModelChange)="saveToLocal()">
-          <span>显示备注</span>
+          <span>打印备注</span>
         </label>
-      </div>
-      <div nz-col [nzSpan]="4">
-        <label nz-checkbox [(ngModel)]="config.showFormula" (ngModelChange)="saveToLocal()">
-          <span>显示总价算式</span>
-        </label>
-      </div>
-    </div>
-    <div nz-row style="padding-top:3px;" [nzGutter]="3">
-      <div nz-col [nzSpan]="24">
-        <nz-input-group nzAddOnBefore="按重量划分">
-          <input nz-input [(ngModel)]="config.weightGroups" (ngModelChange)="weightGroupsChange()" [placeholder]="'数量分组数字, 从小到大，空格分开'">
-        </nz-input-group>
       </div>
     </div>
   </div>
@@ -147,18 +115,15 @@
           </tbody>
         </nz-table>
         <div nz-row [nzGutter]="3" style="padding:5px;padding-bottom:10px;">
-          <div *ngIf="config.showTotalWeight" class="no-wrap" nz-col nzSpan="4">
-            <span>总重:</span>
-            <span class="foot-text">{{t.totalWeight}} 斤</span>
-          </div>
-          <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="6">
-            <span>平均重量:</span>
-            <span class="foot-text">{{t.meanWeight}}{{weightAdjustStr}}{{t.meanWeightResult()}}</span>
+          <div class="no-wrap" nz-col nzSpan="4">
+            <span>总件数:</span>
+            <span class="foot-text">
+              <span>{{t.totalCount}} 元</span>
+            </span>
           </div>
           <div *ngIf="config.showTotalPrice" class="no-wrap" nz-col nzSpan="14">
             <span>总价:</span>
             <span class="foot-text">
-              <span *ngIf="config.showFormula">{{t.meanPrice}} x {{t.items.length}} = </span>
               <span>{{t.totalPrice}} 元</span>
             </span>
           </div>
@@ -182,10 +147,15 @@
       </nz-table>
     </div>
     <div nz-row [nzGutter]="3" style="padding:5px;">
+      <div class="no-wrap" nz-col nzSpan="4">
+        <span>总件数:</span>
+        <span class="foot-text">
+          <span>{{bill.totalCount}} 件</span>
+        </span>
+      </div>
       <div *ngIf="config.showTotalPrice" class="no-wrap" nz-col nzSpan="14">
         <span>总价:</span>
         <span class="foot-text">
-          <span *ngIf="config.showFormula">{{bill.meanPrice}} x {{bill.totalCount}} = </span>
           <span>{{bill.totalPrice}} 元</span>
         </span>
       </div>

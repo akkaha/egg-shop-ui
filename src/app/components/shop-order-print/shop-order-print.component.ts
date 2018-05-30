@@ -165,11 +165,7 @@ export class ShopOrderPrintComponent implements OnInit {
     const i = r * this.config.colCount + c
     const item = this.values[i]
     if (item) {
-      if (this.config.showItemPrice) {
-        return `${item.weight} - ${item.price}元`
-      } else {
-        return item.weight
-      }
+      return `${item.weight} x ${item.count} x ${item.price}=${item.totalPrice}元`
     } else {
       return ''
     }
