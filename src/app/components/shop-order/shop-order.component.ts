@@ -280,6 +280,7 @@ export class ShopOrderComponent implements OnInit {
         }
       }
     })
+    this.searchChange.next()
   }
 }
 
