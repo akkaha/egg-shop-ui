@@ -1,5 +1,18 @@
 import { Subject } from 'rxjs/Subject'
 
+export interface StatisticsQuery {
+  start?: string
+  end?: string
+  user?: number
+  isHome?: string
+}
+
+export interface StatisticsResponse {
+  byLevel?: { level?: string, count?: number }[]
+  byWeight?: { weight?: string, count?: number }[]
+  byDate?: { day?: string, count?: number }[]
+}
+
 export interface ShopUser {
   id?: number
   name?: string

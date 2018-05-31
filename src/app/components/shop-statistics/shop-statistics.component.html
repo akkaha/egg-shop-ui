@@ -1,3 +1,33 @@
 <div>
+  <div nz-row style="padding-bottom:10px;" [nzGutter]="5">
+    <div nz-col [nzSpan]="8">
+      <nz-range-picker [(ngModel)]="dates" nzFormat="yyyy-MM-dd" (ngModelChange)="onDateOk()"></nz-range-picker>
+    </div>
+    <div nz-col nzSpan="8">
+      <nz-input-group nzAddOnBefore="选择用户">
+        <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="selectedUser" (ngModelChange)="selectedUserChange($event)"
+          nzPlaceHolder="选择用户" nzAllowClear nzShowSearch [nzServerSearch]="true" (nzOnSearch)="onSearchUser($event)">
+          <ng-container *ngFor="let user of userList">
+            <nz-option *ngIf="!isLoading" [nzValue]="user" [nzLabel]="user.name" nzCustomContent>
+              <div nz-row>
+                <div nz-col nzSpan="8">
+                  <i class="anticon anticon-user"></i>
+                  <i>{{user.name}}</i>
+                </div>
+                <div nz-col nzSpan="16">
+                  <i class="anticon anticon-home"></i>
+                  <i>{{user.country}}</i>
+                </div>
+              </div>
+            </nz-option>
+          </ng-container>
+          <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+            <i class="anticon anticon-loading anticon-spin loading-icon"></i> 加载数据...
+          </nz-option>
+        </nz-select>
+      </nz-input-group>
+    </div>
+  </div>
+  <div echarts [options]="levelOption"></div>
   <div echarts [options]="chartOption"></div>
 </div>

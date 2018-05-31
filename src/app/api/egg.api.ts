@@ -24,3 +24,5 @@ export const API_ORDER_BILL_INSERT = BASE_URL + '/order-bill/insert'
 export const API_PRICE_QUERY = BASE_URL + '/price/query'
 export const API_PRICE_SAVE = BASE_URL + '/price/save'
 export const API_PRICE_DELETE = BASE_URL + '/price/delete'
+
+export const API_SHOP_STATIS = BASE_URL + '/statistics/count'

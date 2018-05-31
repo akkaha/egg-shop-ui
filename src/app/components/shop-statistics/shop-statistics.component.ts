@@ -4,7 +4,13 @@ import { Location } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
+import * as moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd'
+import { Subject } from 'rxjs/Subject'
+
+import { API_SHOP_STATIS, API_USER_QUERY } from '../../api/egg.api'
+import { ApiRes } from '../../model/api.model'
+import { ShopUser, StatisticsQuery, StatisticsResponse } from '../../model/egg.model'
 
 @Component({
   templateUrl: './shop-statistics.component.html',
@@ -19,84 +25,143 @@ export class ShopStatisticsComponent implements OnInit {
     private message: NzMessageService,
   ) { }
 
-  chartOption = {
-    title: {
-      text: '堆叠区域图'
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
-    },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    xAxis: [
-      {
-        type: 'category',
-        boundaryGap: false,
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-      }
-    ],
-    yAxis: [
-      {
-        type: 'value'
-      }
-    ],
-    series: [
-      {
-        name: '邮件营销',
-        type: 'line',
-        stack: '总量',
-        areaStyle: { normal: {} },
-        data: [120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name: '联盟广告',
-        type: 'line',
-        stack: '总量',
-        areaStyle: { normal: {} },
-        data: [220, 182, 191, 234, 290, 330, 310]
-      },
-      {
-        name: '视频广告',
-        type: 'line',
-        stack: '总量',
-        areaStyle: { normal: {} },
-        data: [150, 232, 201, 154, 190, 330, 410]
-      },
-      {
-        name: '直接访问',
-        type: 'line',
-        stack: '总量',
-        areaStyle: { normal: {} },
-        data: [320, 332, 301, 334, 390, 330, 320]
-      },
-      {
-        name: '搜索引擎',
-        type: 'line',
-        stack: '总量',
-        label: {
-          normal: {
-            show: true,
-            position: 'top'
-          }
-        },
-        areaStyle: { normal: {} },
-        data: [820, 932, 901, 934, 1290, 1330, 1320]
-      }
-    ]
-  }
+  dates: Date[] = []
+  chartOption
+  levelOption
+  userList: ShopUser[] = []
+  user: ShopUser = {}
+  selectedUser: ShopUser = {}
+  isLoading = false
+  searchChange = new Subject<string>()
+  search: StatisticsQuery = {}
 
+  onDateOk() {
+    const start = this.dates[0]
+    const end = this.dates[1]
+    this.search.start = moment(start).format('YYYY-MM-DD')
+    this.search.end = moment(end).format('YYYY-MM-DD')
+    this.load()
+  }
+  selectedUserChange(user: ShopUser) {
+    this.user = { ...this.selectedUser }
+    this.search.user = this.user.id
+    this.load()
+  }
+  onSearchUser(value: string): void {
+    this.isLoading = true;
+    this.searchChange.next(value);
+  }
+  load() {
+    this.http.post<ApiRes<StatisticsResponse>>(API_SHOP_STATIS, this.search).subscribe(res => {
+      if (res.data.byLevel) {
+        const level = res.data.byLevel.map(l => {
+          return { value: l.count, name: l.level }
+        }).sort(function (a, b) { return a.value - b.value; })
+        this.levelOption = {
+          backgroundColor: 'white',
+          title: {
+            text: '层数分布',
+            left: 'center',
+            top: 20,
+            textStyle: {
+              color: '#ccc'
+            }
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+          },
+          visualMap: {
+            show: false,
+            min: 80,
+            max: 600,
+            inRange: {
+              colorLightness: [0, 1]
+            }
+          },
+          series: [
+            {
+              name: '层数',
+              type: 'pie',
+              radius: '55%',
+              center: ['50%', '50%'],
+              data: level,
+              roseType: 'radius',
+              label: {
+                normal: {
+                  textStyle: {
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  }
+                }
+              },
+              labelLine: {
+                normal: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  },
+                  smooth: 0.2,
+                  length: 10,
+                  length2: 20
+                }
+              },
+              itemStyle: {
+                normal: {
+                  color: '#c23531',
+                  shadowBlur: 200,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              animationType: 'scale',
+              animationEasing: 'elasticOut',
+              animationDelay: function (idx) {
+                return Math.random() * 200;
+              }
+            }
+          ]
+        }
+      }
+      if (res.data.byWeight) {
+        this.chartOption = {
+          xAxis: {
+            type: 'category',
+            data: res.data.byWeight.map(w => w.weight),
+            name: '重量'
+          },
+          yAxis: {
+            type: 'value',
+            name: '数量'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            },
+            formatter: function (params) {
+              const tar = params[0]
+              return tar ? tar.data : 0
+            }
+          },
+          series: [{
+            data: res.data.byWeight.map(w => w.count),
+            type: 'bar'
+          }]
+        }
+      }
+    })
+  }
   ngOnInit(): void {
+    this.searchChange.debounceTime(300).subscribe(value => {
+      const user = { name: value, size: 100 }
+      this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, user).subscribe(res => {
+        if (res.data.list.length > 0) {
+          this.userList = res.data.list
+        } else {
+          this.userList = [{ id: -1, name: value }]
+        }
+        this.isLoading = false
+      })
+    })
+    this.searchChange.next()
+    this.load()
   }
 }
