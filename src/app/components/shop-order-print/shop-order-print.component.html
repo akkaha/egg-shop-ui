@@ -12,8 +12,8 @@
         </nz-input-group>
       </div>
       <div nz-col [nzSpan]="6">
-        <nz-input-group nzAddOnBefore="空行个数">
-          <input nz-input [(ngModel)]="config.empRowCount" (ngModelChange)="empRowCountChange()">
+        <nz-input-group nzAddOnBefore="行数">
+          <input nz-input [(ngModel)]="config.rowCount" (ngModelChange)="rowCountChange()">
         </nz-input-group>
       </div>
       <div nz-col [nzSpan]="6">
@@ -81,14 +81,14 @@
           <span class="value-text">{{user.name}}</span>
         </div>
         <div class="no-wrap" nz-col nzSpan="4">
-          <span>件数:</span>
-          <span class="value-text">{{bill.totalCount}}</span>
+          <span>村庄:</span>
+          <span class="value-text">{{user.country}}</span>
         </div>
         <div class="no-wrap" nz-col nzSpan="11">
           <span>时间:</span>
           <span class="value-text">{{bill.date}}</span>
         </div>
-        <div class="no-wrap non-printable" nz-col nzSpan="5" style="text-align:right;">
+        <div class="no-wrap" nz-col nzSpan="5" style="text-align:right;">
           <span style="padding-right:13px;">
             <span>户单号:</span>
             <span class="value-text">{{order.id}}</span>
@@ -96,51 +96,13 @@
         </div>
       </div>
     </div>
-    <div *ngIf="tables.length>0" style="padding-top:3px;">
-      <div *ngFor="let t of tables; let ti = index">
-        <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzData]="values" [nzShowPagination]="false">
-          <tbody nz-tbody>
-            <tr *ngFor="let row of t.rows;let r = index">
-              <td *ngFor="let col of t.cols;let c = index" nz-td [ngStyle]="tdStyle">
-                <span>{{t.w(r,c)}}</span>
-              </td>
-            </tr>
-            <ng-container *ngIf="ti===tables.length-1">
-              <tr *ngFor="let row of empRows;let r = index">
-                <td *ngFor="let col of t.cols;let c = index" nz-td>
-                  <span style="visibility: hidden;">-</span>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </nz-table>
-        <div nz-row [nzGutter]="3" style="padding:5px;padding-bottom:10px;">
-          <div class="no-wrap" nz-col nzSpan="4">
-            <span>总件数:</span>
-            <span class="foot-text">
-              <span>{{t.totalCount}} 元</span>
-            </span>
-          </div>
-          <div *ngIf="config.showTotalPrice" class="no-wrap" nz-col nzSpan="14">
-            <span>总价:</span>
-            <span class="foot-text">
-              <span>{{t.totalPrice}} 元</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="tables.length<1" style="padding-top:3px;">
+    <div style="padding-top:3px;">
       <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzData]="values" [nzShowPagination]="false">
         <tbody nz-tbody>
           <tr *ngFor="let row of rows;let r = index">
             <td *ngFor="let col of cols;let c = index" nz-td style="padding:5px;color:black;">
               <span>{{w(r,c)}}</span>
-            </td>
-          </tr>
-          <tr *ngFor="let row of empRows;let r = index">
-            <td *ngFor="let col of cols;let c = index" nz-td>
-              <span style="visibility: hidden;">-</span>
+              <span style="visibility:hidden;">.</span>
             </td>
           </tr>
         </tbody>
@@ -163,7 +125,7 @@
     <div nz-row [nzGutter]="3" style="padding:5px;">
       <div *ngIf="config.showRemark" class="no-wrap" nz-col nzSpan="24">
         <span>备注:</span>
-        <span class="foot-text">{{order.remark}}</span>
+        <span class="foot-text">{{user.name}} {{user.phone}}</span>
       </div>
     </div>
   </div>

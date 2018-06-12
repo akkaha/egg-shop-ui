@@ -1,20 +1,19 @@
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import * as math from 'mathjs';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import * as math from 'mathjs'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import { API_ORDER_PAY } from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
-import { BillItem, DefaultPrintConfig, OrderBill, PrintConfig, ShopOrder, ShopUser } from '../../model/egg.model';
-import { PrintTable, toPrintTables } from '../../model/print.model';
-import { OrderPayRes } from '../shop-order-pay/shop-order-pay.component';
+import { API_ORDER_PAY } from '../../api/egg.api'
+import { ApiRes } from '../../model/api.model'
+import { BillItem, DefaultPrintConfig, OrderBill, PrintConfig, ShopOrder, ShopUser } from '../../model/egg.model'
+import { OrderPayRes } from '../shop-order-pay/shop-order-pay.component'
 
 @Component({
   selector: 'app-shop-order-print',
@@ -32,11 +31,10 @@ export class ShopOrderPrintComponent implements OnInit {
 
   cols = []
   rows = []
-  empRows = []
 
   CONFIG_KEY = 'user-print-config'
   config: PrintConfig = DefaultPrintConfig
-  tables: PrintTable[] = []
+  // tables: PrintTable[] = []
   tdStyle = {
     'padding': '5px',
     'color': 'black'
@@ -74,14 +72,6 @@ export class ShopOrderPrintComponent implements OnInit {
       return {}
     }
   }
-  weightGroupsChange() {
-    if (this.config.weightGroups) {
-      this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
-    } else {
-      this.tables = []
-    }
-    this.saveToLocal()
-  }
   saveToLocal() {
     try {
       localStorage.setItem(this.CONFIG_KEY, JSON.stringify(this.config))
@@ -106,17 +96,17 @@ export class ShopOrderPrintComponent implements OnInit {
         } else {
           config.colCount = DefaultPrintConfig.colCount
         }
-        if (config.empRowCount) {
-          let num = parseInt(config.empRowCount.toString(), 10)
+        if (config.rowCount) {
+          let num = parseInt(config.rowCount.toString(), 10)
           if (num < 0 || Number.isNaN(num)) {
             num = 0
-            config.empRowCount = num
+            config.rowCount = num
             this.saveToLocal()
           } else {
-            config.empRowCount = num
+            config.rowCount = num
           }
         } else {
-          config.empRowCount = DefaultPrintConfig.empRowCount
+          config.rowCount = DefaultPrintConfig.rowCount
         }
         if (!config.style) {
           config.style = {}
@@ -127,20 +117,20 @@ export class ShopOrderPrintComponent implements OnInit {
       console.log(error)
     }
     this.cols.length = this.config.colCount
-    this.empRows.length = this.config.empRowCount
+    this.rows.length = this.config.rowCount
   }
-  empRowCountChange() {
+  rowCountChange() {
     let num = 0
     try {
-      num = parseInt(this.config.empRowCount.toString(), 10)
+      num = parseInt(this.config.rowCount.toString(), 10)
       if (num < 0 || Number.isNaN(num)) {
         num = 0
       }
     } catch (error) {
       num = 0
     }
-    this.config.empRowCount = num
-    this.empRows.length = num
+    this.config.rowCount = num
+    this.rows.length = num
     this.saveToLocal()
   }
   colCountChange() {
@@ -153,16 +143,14 @@ export class ShopOrderPrintComponent implements OnInit {
     } catch (error) {
       num = 10
     }
-    if (this.config.weightGroups) {
-      this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
-    }
     this.tdStyle['width'] = `${Math.floor(1 / num * 100)}%`
     this.cols.length = num
-    this.rows.length = Math.ceil(this.values.length / num)
+    // fixed rows
+    // this.rows.length = Math.ceil(this.values.length / num)
     this.saveToLocal()
   }
   w(r: number, c: number) {
-    const i = r * this.config.colCount + c
+    const i = c * this.config.rowCount + r
     const item = this.values[i]
     if (item) {
       return `${item.weight} x ${item.count} x ${item.price}=${item.totalPrice}元`
@@ -199,10 +187,11 @@ export class ShopOrderPrintComponent implements OnInit {
             if (this.bill.items) {
               const items = this.bill.items
               this.values = items
-              this.rows.length = Math.ceil(this.values.length / this.config.colCount)
-              if (this.config.weightGroups) {
-                this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
-              }
+              // fixed rows
+              // this.rows.length = Math.ceil(this.values.length / this.config.colCount)
+              // if (this.config.weightGroups) {
+              //   this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
+              // }
             }
           }
         })

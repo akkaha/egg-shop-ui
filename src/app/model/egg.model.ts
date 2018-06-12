@@ -113,6 +113,7 @@ export interface OrderBill {
 
 export interface PrintConfig {
   colCount?: number
+  rowCount?: number
   empRowCount?: number
   title?: string
   showBorder?: boolean
@@ -142,6 +143,7 @@ export interface ShopPrice {
 
 export const DefaultPrintConfig = {
   colCount: 2,
+  rowCount: 6,
   empRowCount: 0,
   title: '🥚河北🥚',
   showBorder: false,
