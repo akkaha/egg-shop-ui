@@ -38,7 +38,7 @@ export class ShopOrderComponent implements OnInit {
   sixWeightItems: OrderItem[] = []
   sevenWeightItems: OrderItem[] = []
   readonly = false
-  SHOP_ORDER_WEIGHTS = 'SHOP_ORDER_WEIGHTS'
+  // SHOP_ORDER_WEIGHTS = 'SHOP_ORDER_WEIGHTS'
   isLoading = false
   searchChange = new Subject<string>()
   remarkSubject = new Subject<string>()
@@ -200,7 +200,7 @@ export class ShopOrderComponent implements OnInit {
       six: this.sixWeights,
       seven: this.sevenWeights
     }
-    localStorage.setItem(this.SHOP_ORDER_WEIGHTS, JSON.stringify(levels))
+    // localStorage.setItem(this.SHOP_ORDER_WEIGHTS, JSON.stringify(levels))
   }
   doCommit() {
     this.modal.confirm({
@@ -268,16 +268,16 @@ export class ShopOrderComponent implements OnInit {
         this.load(id)
       } else {
         // new
-        const weigths = localStorage.getItem(this.SHOP_ORDER_WEIGHTS)
-        try {
-          const levels: LevelWeight = JSON.parse(weigths)
-          if (levels) {
-            this.sixWeights = levels.six || []
-            this.sevenWeights = levels.seven || []
-          }
-        } catch (error) {
-          console.error(error)
-        }
+        // const weigths = localStorage.getItem(this.SHOP_ORDER_WEIGHTS)
+        // try {
+        //   const levels: LevelWeight = JSON.parse(weigths)
+        //   if (levels) {
+        //     this.sixWeights = levels.six || []
+        //     this.sevenWeights = levels.seven || []
+        //   }
+        // } catch (error) {
+        //   console.error(error)
+        // }
       }
     })
     this.searchChange.next()
