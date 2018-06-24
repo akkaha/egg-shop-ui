@@ -93,27 +93,27 @@
       <nz-card *ngIf="sixWeightItems.length>0" style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle"
         nzTitle="六层" [nzExtra]="extraTemplate6">
         <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sixWeightItems; let i=index">
-          <nz-card style="width:100%;" [nzActions]="readonly ? [] : [actionDelete,actionPlus,actionMinus]">
-            <nz-card-meta [nzTitle]="metaTitle" [nzDescription]="metaDesc" [nzAvatar]="avatarTemplate"></nz-card-meta>
-            <ng-template #metaTitle>
-              <span>{{item.count}}</span>
-            </ng-template>
-            <ng-template #metaDesc>
-              <span>六层重量: {{item.weight}} 斤</span>
-            </ng-template>
+          <nz-card style="width:100%;">
+            <div nz-row nzGutter="2">
+              <div nz-col nzSpan="2">
+                <button nz-button nzType="danger" [nzSize]="'default'" nzShape="circle" (click)="removeItem(item)">
+                  <i class="anticon anticon-delete"></i>
+                </button>
+              </div>
+              <div nz-col nzSpan="12">
+                <span>{{item.weight}} 斤:</span>
+                <span style="font-weight: bold;font-size: large">{{item.count}}</span>
+              </div>
+              <div nz-col nzSpan="8">
+                <button style="margin-right:5px;" nz-button nzType="primary" [nzSize]="'large'" nzShape="circle" (click)="minusItemCount(item)">
+                  <i class="anticon anticon-minus"></i>
+                </button>
+                <button nz-button nzType="primary" [nzSize]="'large'" nzShape="circle" (click)="plusItemCount(item)">
+                  <i class="anticon anticon-plus"></i>
+                </button>
+              </div>
+            </div>
           </nz-card>
-          <ng-template #avatarTemplate>
-            <nz-avatar [nzText]="'🥚'" nzSize="default" class="egg-avatar"></nz-avatar>
-          </ng-template>
-          <ng-template #actionDelete>
-            <i class="anticon anticon-delete click-icon" (click)="removeItem(item)"></i>
-          </ng-template>
-          <ng-template #actionPlus>
-            <i class="anticon anticon-plus click-icon" (click)="plusItemCount(item)"></i>
-          </ng-template>
-          <ng-template #actionMinus>
-            <i class="anticon anticon-minus click-icon" (click)="minusItemCount(item)"></i>
-          </ng-template>
         </div>
       </nz-card>
       <ng-template #extraTemplate6>
@@ -122,27 +122,27 @@
       <nz-card *ngIf="sevenWeightItems.length>0" style="width:100%;margin-top:7px;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle"
         nzTitle="七层" [nzExtra]="extraTemplate7">
         <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sevenWeightItems; let i=index">
-          <nz-card style="width:100%;" [nzActions]="readonly ? [] : [actionDelete,actionPlus,actionMinus]">
-            <nz-card-meta [nzTitle]="metaTitle" [nzDescription]="metaDesc" [nzAvatar]="avatarTemplate"></nz-card-meta>
-            <ng-template #metaTitle>
-              <span>{{item.count}}</span>
-            </ng-template>
-            <ng-template #metaDesc>
-              <span>七层重量: {{item.weight}} 斤</span>
-            </ng-template>
+          <nz-card style="width:100%;">
+            <div nz-row nzGutter="2">
+              <div nz-col nzSpan="2">
+                <button nz-button nzType="danger" [nzSize]="'default'" nzShape="circle" (click)="removeItem(item)">
+                  <i class="anticon anticon-delete"></i>
+                </button>
+              </div>
+              <div nz-col nzSpan="12">
+                <span>{{item.weight}} 斤:</span>
+                <span style="font-weight: bold;font-size: large">{{item.count}}</span>
+              </div>
+              <div nz-col nzSpan="8">
+                <button style="margin-right:5px;" nz-button nzType="primary" [nzSize]="'large'" nzShape="circle" (click)="minusItemCount(item)">
+                  <i class="anticon anticon-minus"></i>
+                </button>
+                <button nz-button nzType="primary" [nzSize]="'large'" nzShape="circle" (click)="plusItemCount(item)">
+                  <i class="anticon anticon-plus"></i>
+                </button>
+              </div>
+            </div>
           </nz-card>
-          <ng-template #avatarTemplate>
-            <nz-avatar [nzText]="'🥚'" nzSize="default" class="egg-avatar"></nz-avatar>
-          </ng-template>
-          <ng-template #actionDelete>
-            <i class="anticon anticon-delete click-icon" (click)="removeItem(item)"></i>
-          </ng-template>
-          <ng-template #actionPlus>
-            <i class="anticon anticon-plus click-icon" (click)="plusItemCount(item)"></i>
-          </ng-template>
-          <ng-template #actionMinus>
-            <i class="anticon anticon-minus click-icon" (click)="minusItemCount(item)"></i>
-          </ng-template>
         </div>
       </nz-card>
       <ng-template #extraTemplate7>

@@ -29,7 +29,7 @@ export class ShopOrderComponent implements OnInit {
     padding: '12px',
   }
   gridStyle = {
-    width: '25%',
+    width: '50%',
     textAlign: 'center',
     padding: '4px'
   }
