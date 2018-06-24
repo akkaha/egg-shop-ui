@@ -16,7 +16,7 @@ export interface StatisticsResponse {
 export interface ShopUser {
   id?: number
   name?: string
-  country?: number
+  country?: string
   phone?: string
   remark?: string
   createdAt?: string
@@ -33,6 +33,7 @@ export interface ShopOrder {
   updatedAt?: string
   start?: string
   end?: string
+  userName?: string
 }
 
 export interface ListShopOrderItem {

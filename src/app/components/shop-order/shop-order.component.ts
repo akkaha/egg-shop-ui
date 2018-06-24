@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import { Subject } from 'rxjs/Subject'
 
 import {
@@ -18,6 +19,7 @@ import { ApiRes } from '../../model/api.model'
 import { OrderDetail, OrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
 import { mathIsNumeric, mathSort } from '../../util/math-util'
 import { ShopOrderItemComponent } from '../shop-order-item/shop-order-item.component'
+import { ShopUserComponent } from '../shop-user/shop-user.component'
 
 @Component({
   templateUrl: './shop-order.component.html',
@@ -25,6 +27,13 @@ import { ShopOrderItemComponent } from '../shop-order-item/shop-order-item.compo
 })
 export class ShopOrderComponent implements OnInit {
 
+  stepCurrent = 0
+  search: ShopUser = {}
+  total = 0
+  current = 1
+  size = 10
+  searchChange = new BehaviorSubject('')
+  userList: ShopUser[] = []
   cardBodyStyle = {
     padding: '12px',
   }
@@ -40,11 +49,8 @@ export class ShopOrderComponent implements OnInit {
   readonly = false
   // SHOP_ORDER_WEIGHTS = 'SHOP_ORDER_WEIGHTS'
   isLoading = false
-  searchChange = new Subject<string>()
   remarkSubject = new Subject<string>()
-  userList: ShopUser[] = []
   user: ShopUser = {}
-  selectedUser: ShopUser = {}
   countryEditable = true
   orderCreated = false
   order: ShopOrder = {}
@@ -59,6 +65,31 @@ export class ShopOrderComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
+  pre(): void {
+    this.stepCurrent -= 1;
+  }
+  next(): void {
+    this.stepCurrent += 1;
+  }
+  doSearch(): void {
+    this.searchChange.next('');
+  }
+  addUser() {
+    this.modal.create({
+      nzTitle: '添加用户',
+      nzContent: ShopUserComponent,
+      nzFooter: null,
+      nzComponentParams: {
+        onSaved: function () {
+          this.searchChange.next('')
+        }.bind(this)
+      },
+    })
+  }
+  selectUser(user: ShopUser) {
+    this.user = { ...user }
+    this.next()
+  }
   remarkChange() {
     this.remarkSubject.next(this.order.remark)
   }
@@ -117,18 +148,6 @@ export class ShopOrderComponent implements OnInit {
     } else {
       this.message.warning('请选择用户')
     }
-  }
-  selectedUserChange(user: ShopUser) {
-    this.user = { ...this.selectedUser }
-    if (user && user.id && user.id > 0) {
-      this.countryEditable = false
-    } else {
-      this.countryEditable = true
-    }
-  }
-  onSearchUser(value: string): void {
-    this.isLoading = true;
-    this.searchChange.next(value);
   }
   addWeightLevel(level: string) {
     switch (level) {
@@ -220,9 +239,7 @@ export class ShopOrderComponent implements OnInit {
   load(id: number) {
     this.http.get<ApiRes<{ order: ShopOrder, items: OrderItem[], user: ShopUser, total: number }>>
       (`${API_ORDER_DETAIL}/${id}`).subscribe(res => {
-        this.selectedUser = res.data.user || {}
-        this.user = { ...this.selectedUser }
-        this.userList.push(this.selectedUser)
+        this.user = res.data.user || {}
         this.order = res.data.order
         this.totalCount = res.data.total
         const tmpSix: OrderItem[] = []
@@ -280,7 +297,14 @@ export class ShopOrderComponent implements OnInit {
         // }
       }
     })
-    this.searchChange.next()
+    this.searchChange.debounceTime(300).subscribe(value => {
+      this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, {
+        ...this.search, current: this.current, size: this.size
+      }).subscribe(res => {
+        this.userList = res.data.list
+        this.total = res.data.total
+      })
+    })
   }
 }
 

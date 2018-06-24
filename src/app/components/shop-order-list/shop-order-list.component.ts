@@ -8,7 +8,7 @@ import * as moment from 'moment'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-import { API_ORDER_DELETE, API_ORDER_QUERY, API_ORDER_UPDATE, API_USER_QUERY } from '../../api/egg.api'
+import { API_ORDER_DELETE, API_ORDER_QUERY, API_ORDER_UPDATE } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
 import { ListShopOrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
 
@@ -164,16 +164,5 @@ export class ShopOrderListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.load()
-    this.searchChange.debounceTime(300).subscribe(value => {
-      const user = { name: value, size: 100 }
-      this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, user).subscribe(res => {
-        if (res.data.list.length > 0) {
-          this.userList = res.data.list
-        } else {
-          this.userList = []
-        }
-        this.isLoading = false
-      })
-    })
   }
 }

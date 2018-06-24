@@ -1,27 +1,11 @@
 <div style="background-color:white;">
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
-    <div nz-col [nzXs]="6" [nzSm]="6" [nzMd]="6">
-      <nz-input-group nzAddOnBefore="客户:">
-        <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="search.user" nzAllowClear nzShowSearch [nzServerSearch]="true"
-          (nzOnSearch)="onSearchUser($event)" [nzNotFoundContent]="'没有符合检索条件的用户'">
-          <ng-container *ngFor="let user of userList">
-            <nz-option *ngIf="!isLoading" [nzValue]="user.id" [nzLabel]="user.name" nzCustomContent>
-              <div nz-row>
-                <div nz-col nzSpan="8">
-                  <i class="anticon anticon-user"></i>
-                  <i>{{user.name}}</i>
-                </div>
-                <div nz-col nzSpan="16">
-                  <i class="anticon anticon-home"></i>
-                  <i>{{user.country}}</i>
-                </div>
-              </div>
-            </nz-option>
-          </ng-container>
-          <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-            <i class="anticon anticon-loading anticon-spin loading-icon"></i> 加载数据...
-          </nz-option>
-        </nz-select>
+    <div nz-col [nzSpan]="8">
+      <nz-range-picker [(ngModel)]="dates" nzFormat="yyyy-MM-dd" (ngModelChange)="onDateOk()"></nz-range-picker>
+    </div>
+    <div nz-col [nzXs]="8" [nzSm]="8" [nzMd]="8">
+      <nz-input-group nzAddOnBefore="姓名:">
+        <input type="text" nz-input [(ngModel)]="search.userName">
       </nz-input-group>
     </div>
     <div nz-col [nzXs]="6" [nzSm]="6" [nzMd]="6">
@@ -30,10 +14,7 @@
         </nz-option>
       </nz-select>
     </div>
-    <div nz-col [nzSpan]="8">
-      <nz-range-picker [(ngModel)]="dates" nzFormat="yyyy-MM-dd" (ngModelChange)="onDateOk()"></nz-range-picker>
-    </div>
-    <div nz-col [nzXs]="4" [nzSm]="4" [nzMd]="4">
+    <div nz-col [nzXs]="2" [nzSm]="2" [nzMd]="2">
       <button nz-button [nzType]="'primary'" (click)="doSearch()">
         <span>搜索</span>
       </button>

@@ -1,34 +1,134 @@
 <div style="background-color:white;">
   <div>
-    <div *ngIf="!orderCreated" nz-row [nzGutter]="3" style="padding-bottom:7px;">
-      <div nz-col nzSpan="12">
-        <nz-input-group nzAddOnBefore="选择用户">
-          <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="selectedUser" (ngModelChange)="selectedUserChange($event)"
-            nzPlaceHolder="选择用户" nzAllowClear nzShowSearch [nzServerSearch]="true" (nzOnSearch)="onSearchUser($event)">
-            <ng-container *ngFor="let user of userList">
-              <nz-option *ngIf="!isLoading" [nzValue]="user" [nzLabel]="user.name" nzCustomContent>
-                <div nz-row>
-                  <div nz-col nzSpan="8">
-                    <i class="anticon anticon-user"></i>
-                    <i>{{user.name}}</i>
-                  </div>
-                  <div nz-col nzSpan="16">
-                    <i class="anticon anticon-home"></i>
-                    <i>{{user.country}}</i>
-                  </div>
-                </div>
-              </nz-option>
-            </ng-container>
-            <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-              <i class="anticon anticon-loading anticon-spin loading-icon"></i> 加载数据...
-            </nz-option>
-          </nz-select>
-        </nz-input-group>
+    <div *ngIf="!orderCreated" style="padding-bottom:7px;">
+      <nz-steps style="padding: 10px;" [nzCurrent]="stepCurrent">
+        <nz-step nzTitle="选择用户"></nz-step>
+        <nz-step nzTitle="选择斤称"></nz-step>
+        <nz-step nzTitle="创建"></nz-step>
+      </nz-steps>
+      <div>
+        <div *ngIf="stepCurrent == 0">
+          <div>
+            <div nz-row [nzGutter]="3">
+              <div nz-col [nzXs]="10" [nzSm]="10" [nzMd]="10">
+                <nz-input-group nzAddOnBefore="按姓名搜索:">
+                  <input type="text" nz-input [(ngModel)]="search.name" (ngModelChange)="doSearch()">
+                </nz-input-group>
+              </div>
+              <div nz-col [nzXs]="4" [nzSm]="4" [nzMd]="4">
+                <button [nzSize]="'default'" nz-button [nzType]="'primary'" (click)="addUser()">
+                  <span style="margin:0px;">添加新用户</span>
+                </button>
+              </div>
+            </div>
+            <div style="padding-top:13px;">
+              <nz-table #tableData [nzData]="userList" [nzSize]="'default'" [nzShowPagination]="false" [nzNoResult]="'没有数据'">
+                <thead nz-thead>
+                  <tr>
+                    <th nz-th class="nowrap">
+                      <span>姓名</span>
+                    </th>
+                    <th nz-th class="nowrap">
+                      <span>村庄</span>
+                    </th>
+                    <th nz-th class="nowrap sm-hidden">
+                      <span>手机</span>
+                    </th>
+                    <th nz-th class="nowrap sm-hidden">
+                      <span>创建时间</span>
+                    </th>
+                    <th nz-th class="nowrap" style="width:200px;">
+                      <span>操作</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody nz-tbody>
+                  <tr nz-tbody-tr *ngFor="let item of tableData.data; let i = index">
+                    <td nz-td>
+                      <span>{{item.name}}</span>
+                    </td>
+                    <td nz-td>
+                      <span>{{item.country}}</span>
+                    </td>
+                    <td nz-td>
+                      <span>{{item.phone}}</span>
+                    </td>
+                    <td nz-td>
+                      <span>{{item.createdAt}}</span>
+                    </td>
+                    <td nz-td style="padding-left:8px;" class="nowrap">
+                      <button style="color:coral;" nz-button [nzType]="'default'" [nzSize]="'small'" (click)="selectUser(item)">
+                        <span>
+                          <span>选择</span>
+                          <i class="anticon anticon-check"></i>
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+            <div>
+              <div *ngIf="userList && userList.length > 0" style="margin-top:15px;margin-bottom:15px;padding-left:15px;">
+                <nz-pagination [(nzPageIndex)]="current" [nzTotal]="total" [(nzPageSize)]="size" [nzSize]="'small'" [nzShowTotal]="totalTemplate"
+                  [nzShowSizeChanger]="true" [nzPageSizeOptions]="[10, 20, 50, 100]" (nzPageIndexChange)="doSearch()" (nzPageSizeChange)="doSearch()">
+                </nz-pagination>
+                <ng-template #totalTemplate let-total>共 {{total}} 条</ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="stepCurrent == 1">
+          <div>
+            <div nz-row [nzGutter]="3" style="padding-bottom: 5px;">
+              <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12">
+                <nz-input-group nzAddOnBefore="姓名:">
+                  <input type="text" nz-input [(ngModel)]="user.name" readonly>
+                </nz-input-group>
+              </div>
+              <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12">
+                <nz-input-group nzAddOnBefore="村庄:">
+                  <input type="text" nz-input [(ngModel)]="user.country" readonly>
+                </nz-input-group>
+              </div>
+            </div>
+          </div>
+          <nz-card style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle" nzTitle="选择六层使用的斤称" [nzExtra]="extraTemplate6">
+            <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sixWeights; let i=index">
+              <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+                <input type="text" nz-input [(ngModel)]="item.weight" (ngModelChange)="weightLevelChange('6',item.weight)" placeholder="输入新斤称">
+              </nz-input-group>
+              <ng-template #suffixButton>
+                <button nz-button nzType="primary" nzSize="large" (click)="removeWeightLevel('6', i)">移除</button>
+              </ng-template>
+            </div>
+          </nz-card>
+          <ng-template #extraTemplate6>
+            <a class="click-icon" (click)="sortWeightLevel('6')" style="padding-right: 5px;">排序</a>
+            <a class="click-icon" (click)="addWeightLevel('6')">添加</a>
+          </ng-template>
+          <nz-card style="width:100%;margin-top:7px;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle" nzTitle="选择七层使用的斤称"
+            [nzExtra]="extraTemplate7">
+            <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sevenWeights; let i=index">
+              <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+                <input type="text" nz-input [(ngModel)]="item.weight" (ngModelChange)="weightLevelChange('7',item.weight)" placeholder="输入新斤称">
+              </nz-input-group>
+              <ng-template #suffixButton>
+                <button nz-button nzType="primary" nzSize="large" (click)="removeWeightLevel('7', i)">移除</button>
+              </ng-template>
+            </div>
+          </nz-card>
+          <ng-template #extraTemplate7>
+            <a class="click-icon" (click)="sortWeightLevel('7')" style="padding-right: 5px;">排序</a>
+            <a class="click-icon" (click)="addWeightLevel('7')">添加</a>
+          </ng-template>
+        </div>
       </div>
-      <div nz-col nzSpan="12">
-        <nz-input-group nzAddOnBefore="所在地">
-          <input nz-input placeholder="所在地" [(ngModel)]="user.country" [readonly]="!countryEditable">
-        </nz-input-group>
+      <div style="padding-top:10px;">
+        <button nz-button nzType="default" (click)="pre()" *ngIf="stepCurrent > 0">
+          <span>上一步</span>
+        </button>
+        <button nz-button nzType="primary" (click)="newOrder()" *ngIf="stepCurrent === 1">确认新建</button>
       </div>
     </div>
     <div *ngIf="orderCreated" nz-row [nzGutter]="3" style="padding-bottom:7px;">
@@ -44,7 +144,7 @@
       </div>
       <div nz-col nzSpan="6">
         <nz-input-group nzAddOnBefore="姓名">
-          <input nz-input [(ngModel)]="selectedUser.name" [readonly]="true">
+          <input nz-input [(ngModel)]="user.name" [readonly]="true">
         </nz-input-group>
       </div>
       <div nz-col nzSpan="10">
@@ -58,44 +158,13 @@
         </nz-input-group>
       </div>
     </div>
-    <div *ngIf="!orderCreated">
-      <nz-card style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle" nzTitle="选择六层使用的斤称" [nzExtra]="extraTemplate6">
-        <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sixWeights; let i=index">
-          <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
-            <input type="text" nz-input [(ngModel)]="item.weight" (ngModelChange)="weightLevelChange('6',item.weight)" placeholder="输入新斤称">
-          </nz-input-group>
-          <ng-template #suffixButton>
-            <button nz-button nzType="primary" nzSize="large" (click)="removeWeightLevel('6', i)">移除</button>
-          </ng-template>
-        </div>
-      </nz-card>
-      <ng-template #extraTemplate6>
-        <a class="click-icon" (click)="sortWeightLevel('6')" style="padding-right: 5px;">排序</a>
-        <a class="click-icon" (click)="addWeightLevel('6')">添加</a>
-      </ng-template>
-      <nz-card style="width:100%;margin-top:7px;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle" nzTitle="选择七层使用的斤称"
-        [nzExtra]="extraTemplate7">
-        <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sevenWeights; let i=index">
-          <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
-            <input type="text" nz-input [(ngModel)]="item.weight" (ngModelChange)="weightLevelChange('7',item.weight)" placeholder="输入新斤称">
-          </nz-input-group>
-          <ng-template #suffixButton>
-            <button nz-button nzType="primary" nzSize="large" (click)="removeWeightLevel('7', i)">移除</button>
-          </ng-template>
-        </div>
-      </nz-card>
-      <ng-template #extraTemplate7>
-        <a class="click-icon" (click)="sortWeightLevel('7')" style="padding-right: 5px;">排序</a>
-        <a class="click-icon" (click)="addWeightLevel('7')">添加</a>
-      </ng-template>
-    </div>
     <div *ngIf="orderCreated">
       <nz-card *ngIf="sixWeightItems.length>0" style="width:100%;" [nzBordered]="true" [nzHoverable]="true" [nzBodyStyle]="cardBodyStyle"
         nzTitle="六层" [nzExtra]="extraTemplate6">
         <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sixWeightItems; let i=index">
           <nz-card style="width:100%;">
             <div nz-row nzGutter="2">
-              <div nz-col nzSpan="2">
+              <div *ngIf="!readonly" nz-col nzSpan="2">
                 <button nz-button nzType="danger" [nzSize]="'default'" nzShape="circle" (click)="removeItem(item)">
                   <i class="anticon anticon-delete"></i>
                 </button>
@@ -104,7 +173,7 @@
                 <span>{{item.weight}} 斤:</span>
                 <span style="font-weight: bold;font-size: large">{{item.count}}</span>
               </div>
-              <div nz-col nzSpan="8">
+              <div *ngIf="!readonly" nz-col nzSpan="8">
                 <button style="margin-right:5px;" nz-button nzType="primary" [nzSize]="'large'" nzShape="circle" (click)="minusItemCount(item)">
                   <i class="anticon anticon-minus"></i>
                 </button>
@@ -124,7 +193,7 @@
         <div nz-card-grid [ngStyle]="gridStyle" *ngFor="let item of sevenWeightItems; let i=index">
           <nz-card style="width:100%;">
             <div nz-row nzGutter="2">
-              <div nz-col nzSpan="2">
+              <div *ngIf="!readonly" nz-col nzSpan="2">
                 <button nz-button nzType="danger" [nzSize]="'default'" nzShape="circle" (click)="removeItem(item)">
                   <i class="anticon anticon-delete"></i>
                 </button>
@@ -133,7 +202,7 @@
                 <span>{{item.weight}} 斤:</span>
                 <span style="font-weight: bold;font-size: large">{{item.count}}</span>
               </div>
-              <div nz-col nzSpan="8">
+              <div *ngIf="!readonly" nz-col nzSpan="8">
                 <button style="margin-right:5px;" nz-button nzType="primary" [nzSize]="'large'" nzShape="circle" (click)="minusItemCount(item)">
                   <i class="anticon anticon-minus"></i>
                 </button>
@@ -154,7 +223,6 @@
         <button *ngIf="!readonly && orderCreated" nz-button [nzType]="'danger'" (click)="doCommit()">
           <span>提交结算</span>
         </button>
-        <button *ngIf="!orderCreated" nz-button nzType="primary" (click)="newOrder()">确认新建</button>
         <button nz-button [nzType]="'dashed'" (click)="goBack()">
           <span style="margin:0px;">
             <i class="anticon anticon-rollback"></i>返回列表</span>
