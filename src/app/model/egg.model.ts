@@ -31,6 +31,8 @@ export interface ShopOrder {
   remark?: string
   createdAt?: string
   updatedAt?: string
+  start?: string
+  end?: string
 }
 
 export interface ListShopOrderItem {

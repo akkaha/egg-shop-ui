@@ -1,6 +1,6 @@
 <div style="background-color:white;">
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
-    <div nz-col [nzXs]="10" [nzSm]="10" [nzMd]="10">
+    <div nz-col [nzXs]="6" [nzSm]="6" [nzMd]="6">
       <nz-input-group nzAddOnBefore="客户:">
         <nz-select style="width: 100%;" nzMode="default" [(ngModel)]="search.user" nzAllowClear nzShowSearch [nzServerSearch]="true"
           (nzOnSearch)="onSearchUser($event)" [nzNotFoundContent]="'没有符合检索条件的用户'">
@@ -24,11 +24,14 @@
         </nz-select>
       </nz-input-group>
     </div>
-    <div nz-col [nzXs]="10" [nzSm]="10" [nzMd]="10">
+    <div nz-col [nzXs]="6" [nzSm]="6" [nzMd]="6">
       <nz-select style="width: 100%;" nzAllowClear [nzPlaceHolder]="'选择单子状态'" [(ngModel)]="search.status" nzShowSearch>
         <nz-option *ngFor="let option of statusOptions" [nzLabel]="option.label" [nzValue]="option.value" [nzDisabled]="option.disabled">
         </nz-option>
       </nz-select>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-range-picker [(ngModel)]="dates" nzFormat="yyyy-MM-dd" (ngModelChange)="onDateOk()"></nz-range-picker>
     </div>
     <div nz-col [nzXs]="4" [nzSm]="4" [nzMd]="4">
       <button nz-button [nzType]="'primary'" (click)="doSearch()">

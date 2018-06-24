@@ -4,12 +4,13 @@ import { Location } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router'
+import * as moment from 'moment'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
 import { API_ORDER_DELETE, API_ORDER_QUERY, API_ORDER_UPDATE, API_USER_QUERY } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
 import { ListShopOrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   templateUrl: './shop-order-list.component.html',
@@ -17,6 +18,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 })
 export class ShopOrderListComponent implements OnInit {
 
+  dates: Date[] = []
   search: ShopOrder = {}
   total = 0
   current = 1
@@ -40,6 +42,18 @@ export class ShopOrderListComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
+  onDateOk() {
+    const start = this.dates[0]
+    const end = this.dates[1]
+    if (start && end) {
+      this.search.start = moment(start).format('YYYY-MM-DD')
+      this.search.end = moment(end).format('YYYY-MM-DD')
+    } else {
+      this.search.start = undefined
+      this.search.end = undefined
+    }
+    this.load()
+  }
   onSearchUser(value: string): void {
     this.isLoading = true;
     this.searchChange.next(value);
