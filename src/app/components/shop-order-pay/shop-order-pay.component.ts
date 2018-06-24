@@ -50,7 +50,7 @@ export class ShopOrderPayComponent implements OnInit {
   doFinish() {
     this.modal.create({
       nzTitle: `确认完成`,
-      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.user}, 数量: ${this.bill.totalCount}, 金额: ${this.bill.totalPrice}.`,
+      nzContent: `编号: ${this.order.dayOrder}, 姓名: ${this.order.user}, 数量: ${this.bill.totalCount}, 金额: ${this.bill.totalPrice}.`,
       nzOnOk: () => {
         const toUpdate = clearOrderField(this.order)
         toUpdate.status = OrderStatus.FINISHED
@@ -65,7 +65,7 @@ export class ShopOrderPayComponent implements OnInit {
   }
   doNew() {
     this.modal.confirm({
-      nzTitle: `确认打回单号: ${this.order.id}`,
+      nzTitle: `确认打回单号: ${this.order.dayOrder}`,
       nzContent: `打回后状态变为 '新增', 需要重新提交.`,
       nzOnOk: () => {
         this.order.status = OrderStatus.NEW

@@ -25,6 +25,7 @@ export interface ShopUser {
 
 export interface ShopOrder {
   id?: number
+  dayOrder?: number
   user?: number
   bill?: string
   status?: string
