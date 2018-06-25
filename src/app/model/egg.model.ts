@@ -128,6 +128,7 @@ export interface PrintConfig {
   showFormula?: boolean,
   showRemark?: boolean,
   showCreateTime?: boolean
+  remarkContent?: string
   style?: {
     top?: string
     left?: string
@@ -158,6 +159,7 @@ export const DefaultPrintConfig = {
   showFormula: false,
   showRemark: true,
   showCreateTime: true,
+  remarkContent : '郭强 电话 13803368222',
   style: {
     top: '0',
     left: '0',

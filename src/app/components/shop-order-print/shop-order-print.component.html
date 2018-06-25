@@ -64,6 +64,11 @@
           <span>打印备注</span>
         </label>
       </div>
+      <!-- <div nz-col [nzSpan]="16">
+        <nz-input-group nzAddOnBefore="备注内容">
+          <input nz-input [(ngModel)]="config.remarkContent" (ngModelChange)="saveToLocal()">
+        </nz-input-group>
+      </div> -->
     </div>
   </div>
   <div class="printable print-container" [ngStyle]="paddingStyle()">
@@ -124,7 +129,7 @@
     </div>
     <div nz-row [nzGutter]="3" style="padding:5px;">
       <div *ngIf="config.showRemark" class="no-wrap" nz-col nzSpan="24">
-        <span class="foot-text">{{user.name}}  电话: {{user.phone}}</span>
+        <span class="foot-text">{{config.remarkContent}}</span>
       </div>
     </div>
   </div>
