@@ -159,7 +159,7 @@ export const DefaultPrintConfig = {
   showFormula: false,
   showRemark: true,
   showCreateTime: true,
-  remarkContent : '郭强 电话 13803368222',
+  remarkContent : '',
   style: {
     top: '0',
     left: '0',
