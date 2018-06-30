@@ -15,7 +15,13 @@
                   <input type="text" nz-input [(ngModel)]="search.name" (ngModelChange)="doSearch()">
                 </nz-input-group>
               </div>
-              <div nz-col [nzXs]="4" [nzSm]="4" [nzMd]="4">
+              <div nz-col [nzXs]="14" [nzSm]="14" [nzMd]="14">
+                <button [nzSize]="'default'" nz-button [nzType]="'primary'" (click)="reset()">
+                  <span style="margin:0px;">重置</span>
+                </button>
+                <button [nzSize]="'default'" nz-button [nzType]="'primary'" (click)="doSearch()">
+                  <span style="margin:0px;">搜索</span>
+                </button>
                 <button [nzSize]="'default'" nz-button [nzType]="'primary'" (click)="addUser()">
                   <span style="margin:0px;">添加新用户</span>
                 </button>
@@ -134,7 +140,7 @@
     <div *ngIf="orderCreated" nz-row [nzGutter]="3" style="padding-bottom:7px;">
       <div nz-col nzSpan="4">
         <nz-input-group nzAddOnBefore="单号">
-          <input nz-input [(ngModel)]="order.dayOrder" [readonly]="true">
+          <input nz-input [(ngModel)]="order.dayOrder" (ngModelChange)="dayOrderChange()" [readonly]="readonly">
         </nz-input-group>
       </div>
       <div nz-col nzSpan="4">

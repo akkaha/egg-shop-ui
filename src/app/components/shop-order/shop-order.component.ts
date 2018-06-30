@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NzMessageService, NzModalService } from 'ng-zorro-antd'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import { Subject } from 'rxjs/Subject'
 
 import {
@@ -32,7 +31,7 @@ export class ShopOrderComponent implements OnInit {
   total = 0
   current = 1
   size = 10
-  searchChange = new BehaviorSubject('')
+  searchChange = new Subject<string>()
   userList: ShopUser[] = []
   cardBodyStyle = {
     padding: '12px',
@@ -70,6 +69,15 @@ export class ShopOrderComponent implements OnInit {
   }
   next(): void {
     this.stepCurrent += 1;
+  }
+  reset(): void {
+    this.search.name = ''
+    this.doSearch()
+  }
+  dayOrderChange() {
+    if (this.order.dayOrder) {
+      this.remarkChange()
+    }
   }
   doSearch(): void {
     this.searchChange.next('');
@@ -256,20 +264,12 @@ export class ShopOrderComponent implements OnInit {
       })
   }
   ngOnInit(): void {
-    this.searchChange.debounceTime(300).subscribe(value => {
-      const user = { name: value, size: 100 }
-      this.http.post<ApiRes<ShopUser[]>>(API_USER_QUERY, user).subscribe(res => {
-        if (res.data.list.length > 0) {
-          this.userList = res.data.list
-        } else {
-          this.userList = [{ id: -1, name: value }]
-        }
-        this.isLoading = false
-      })
-    })
     this.remarkSubject.debounceTime(300).subscribe((remark) => {
-      const order: ShopOrder = { id: this.order.id, remark: remark }
-      this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, order).subscribe(res => {
+      const reqBody: ShopOrder = { id: this.order.id, remark: remark }
+      if (this.order.dayOrder) {
+        reqBody.dayOrder = this.order.dayOrder
+      }
+      this.http.post<ApiRes<ShopOrder>>(API_ORDER_UPDATE, reqBody).subscribe(res => {
       })
     })
     this.route.queryParams.subscribe(query => {
@@ -305,6 +305,7 @@ export class ShopOrderComponent implements OnInit {
         this.total = res.data.total
       })
     })
+    this.doSearch()
   }
 }
 
