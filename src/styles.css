@@ -23,6 +23,9 @@
 }
 
 @media print {
+  body * {
+    font-size: 100%;
+  }
   @page {
     size: 234mm 91mm;
   }
@@ -54,7 +57,7 @@
   .printable .non-printable {
     display: none;
   }
-  body * {
-    font-size: 100%;
-  }
+}
+.printable td.print-td {
+  font-size: large;
 }
