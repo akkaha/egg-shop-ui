@@ -55,11 +55,6 @@
     </div>
     <div nz-row style="padding-top:3px;" [nzGutter]="3">
       <div nz-col [nzSpan]="2">
-        <label nz-checkbox [(ngModel)]="config.showBorder" (ngModelChange)="saveToLocal()">
-          <span>打印边框</span>
-        </label>
-      </div>
-      <div nz-col [nzSpan]="2">
         <label nz-checkbox [(ngModel)]="config.showRemark" (ngModelChange)="saveToLocal()">
           <span>打印备注</span>
         </label>
@@ -102,32 +97,32 @@
       </div>
     </div>
     <div style="padding-top:3px;">
-      <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzData]="values" [nzShowPagination]="false">
-        <tbody nz-tbody>
+      <table style="width:100%;">
+        <tbody>
           <tr *ngFor="let row of rows;let r = index">
-            <td *ngFor="let col of cols;let c = index" class="print-td" nz-td style="padding:5px;color:black;">
+            <td *ngFor="let col of cols;let c = index" class="print-text" style="padding:5px;color:black;">
               <span>{{w(r,c)}}</span>
               <span style="visibility:hidden;">.</span>
             </td>
           </tr>
         </tbody>
-      </nz-table>
+      </table>
     </div>
     <div nz-row [nzGutter]="3" style="padding:5px;">
-      <div class="no-wrap" nz-col nzSpan="4">
+      <div class="no-wrap print-text" nz-col nzSpan="4">
         <span>总数</span>
         <span class="foot-text">
           <span>（{{bill.totalCount}}）</span>
         </span>
       </div>
-      <div *ngIf="config.showTotalPrice" class="no-wrap" nz-col nzSpan="14">
+      <div *ngIf="config.showTotalPrice" class="no-wrap print-text" nz-col nzSpan="12">
         <span>总款</span>
         <span class="foot-text">
           <span>（{{bill.totalPrice}} 元）</span>
         </span>
       </div>
-      <div *ngIf="config.showRemark" style="text-align:right;" nz-col nzSpan="6">
-        <span class="foot-text" style="margin-right:10px;">电话: 13803368222 郭强</span>
+      <div *ngIf="config.showRemark" style="text-align:right;" nz-col nzSpan="8">
+        <span class="foot-text print-text" style="margin-right:10px;">电话: 13803368222 郭强</span>
       </div>
     </div>
   </div>

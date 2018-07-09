@@ -58,6 +58,6 @@
     display: none;
   }
 }
-.printable td.print-td {
-  font-size: large;
+.printable .print-text {
+  font-size: 130%;
 }
