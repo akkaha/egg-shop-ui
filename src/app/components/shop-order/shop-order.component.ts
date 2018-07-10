@@ -15,7 +15,7 @@ import {
   API_USER_QUERY,
 } from '../../api/egg.api'
 import { ApiRes } from '../../model/api.model'
-import { OrderDetail, OrderItem, OrderStatus, ShopOrder, ShopUser } from '../../model/egg.model'
+import { OrderDetail, OrderItem, OrderStatus, ShopOrder, ShopUser, UserExt } from '../../model/egg.model'
 import { mathIsNumeric, mathSort } from '../../util/math-util'
 import { ShopOrderItemComponent } from '../shop-order-item/shop-order-item.component'
 import { ShopUserComponent } from '../shop-user/shop-user.component'
@@ -96,6 +96,29 @@ export class ShopOrderComponent implements OnInit {
   }
   selectUser(user: ShopUser) {
     this.user = { ...user }
+    const extStr = this.user.ext
+    if (extStr) {
+      try {
+        const userExt: UserExt = JSON.parse(extStr)
+        if (userExt.sixWeights) {
+          this.sixWeights = userExt.sixWeights.map(w => {
+            const item: LevelWeightItem = { weight: w }
+            return item
+          })
+        }
+        if (userExt.sevenWeights) {
+          this.sevenWeights = userExt.sevenWeights.map(w => {
+            const item: LevelWeightItem = { weight: w }
+            return item
+          })
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      this.sixWeights = []
+      this.sevenWeights = []
+    }
     this.next()
   }
   remarkChange() {

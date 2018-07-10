@@ -19,8 +19,14 @@ export interface ShopUser {
   country?: string
   phone?: string
   remark?: string
+  ext?: string
   createdAt?: string
   updatedAt?: string
+}
+
+export interface UserExt {
+  sixWeights: string[]
+  sevenWeights: string[]
 }
 
 export interface ShopOrder {
@@ -159,7 +165,7 @@ export const DefaultPrintConfig = {
   showFormula: false,
   showRemark: true,
   showCreateTime: true,
-  remarkContent : '',
+  remarkContent: '',
   style: {
     top: '0',
     left: '0',
