@@ -118,7 +118,7 @@
       <div *ngIf="config.showTotalPrice" class="no-wrap print-text" nz-col nzSpan="12">
         <span>总款</span>
         <span class="foot-text">
-          <span>（{{bill.totalPrice}} 元）</span>
+          <span>（{{formatPrice(bill.totalPrice)}} 元）</span>
         </span>
       </div>
       <div *ngIf="config.showRemark" style="text-align:right;" nz-col nzSpan="8">

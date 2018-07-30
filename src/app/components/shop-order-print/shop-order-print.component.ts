@@ -153,7 +153,22 @@ export class ShopOrderPrintComponent implements OnInit {
     const i = c * this.config.rowCount + r
     const item = this.values[i]
     if (item) {
-      return `${item.weight} x ${item.count} x ${item.price}=${item.totalPrice}元`
+      const itemPrice = this.formatPrice(item.price)
+      const formatedPrice = this.formatPrice(item.totalPrice)
+      return `${item.weight} x ${item.count} x ${itemPrice}=${formatedPrice}元`
+    } else {
+      return ''
+    }
+  }
+  formatPrice(val: string) {
+    if (val) {
+      try {
+        const ret = parseFloat((Math.round(Number(val) * 10) / 10).toString()).toFixed(1)
+        return ret
+      } catch (error) {
+        console.error(error)
+        return ''
+      }
     } else {
       return ''
     }
