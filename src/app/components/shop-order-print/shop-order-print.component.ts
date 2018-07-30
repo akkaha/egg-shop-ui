@@ -161,16 +161,16 @@ export class ShopOrderPrintComponent implements OnInit {
     }
   }
   formatPrice(val: string) {
-    if (val) {
+    if (val && val.indexOf('.') >= 0) {
       try {
         const ret = parseFloat((Math.round(Number(val) * 10) / 10).toString()).toFixed(1)
         return ret
       } catch (error) {
         console.error(error)
-        return ''
+        return val
       }
     } else {
-      return ''
+      return val
     }
   }
   print() {
