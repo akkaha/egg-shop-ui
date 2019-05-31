@@ -156,7 +156,7 @@ export const DefaultPrintConfig = {
   colCount: 2,
   rowCount: 6,
   empRowCount: 0,
-  title: '🥚河北🥚',
+  title: '津行蛋品收购处',
   showBorder: false,
   showItemPrice: false,
   showTotalWeight: true,
